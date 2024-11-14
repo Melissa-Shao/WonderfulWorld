@@ -6,6 +6,7 @@ module io.github.wonderfulworld.comp2522202430termprojectwonderfulworld {
     requires com.dlsc.formsfx;
     requires org.kordamp.ikonli.javafx;
     requires org.kordamp.bootstrapfx.core;
+    requires static lombok;
 
     opens io.github.wonderfulworld.comp2522202430termprojectwonderfulworld to javafx.fxml;
     exports io.github.wonderfulworld.comp2522202430termprojectwonderfulworld;

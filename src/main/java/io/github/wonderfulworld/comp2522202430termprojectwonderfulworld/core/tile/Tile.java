@@ -6,8 +6,7 @@ import lombok.Getter;
 
 /**
  * The Tile class represents tiles in the game.
- * Each tile has an associated image for rendering to indicate whether entities
- * can move through it.
+ *
  *
  * @author Candice Wei
  * @version 2024

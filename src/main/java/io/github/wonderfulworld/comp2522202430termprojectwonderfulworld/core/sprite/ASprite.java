@@ -1,10 +1,11 @@
 package io.github.wonderfulworld.comp2522202430termprojectwonderfulworld.core.sprite;
 
+import javafx.scene.image.Image;
 import lombok.Getter;
 import java.util.Objects;
 
 /**
- * Asprite is an abstract class used as a superclass for various sprite entities in the game.
+ * ASprite is an abstract class used as a superclass for various sprite entities in the game.
  * It provides basic properties such as position, dimensions, status, and speed for sprite objects.
  * Each sprite has attributes like position, width, height,
  * and status indicators for health and attacks.
@@ -55,9 +56,13 @@ public abstract class ASprite {
      * The attack speed of the sprite.
      */
     protected double attackSpeed;
+    /**
+     * The image of the sprite.
+     */
+    protected Image image;
 
     /**
-     * Constructs a new Asprite object with initial position set to (0, 0) and alive status.
+     * Constructs a new ASprite object with initial position set to (0, 0) and alive status.
      *
      */
     public ASprite() {
@@ -75,6 +80,27 @@ public abstract class ASprite {
     public void setPosition(final double x, final double y) {
         this.positionX = x;
         this.positionY = y;
+    }
+
+    /**
+     * Sets image.
+     *
+     * @param image The image.
+     */
+    public void setImage(final Image image) {
+        this.image = image;
+        width = image.getWidth();
+        height = image.getHeight();
+    }
+
+    /**
+     * Sets image.
+     *
+     * @param filename The filename.
+     */
+    public void setImage(final String filename) {
+        Image newImage = new Image(filename);
+        setImage(newImage);
     }
 
     /**
@@ -101,8 +127,8 @@ public abstract class ASprite {
                 + ", isDead=" + isDead
                 + ", lastAttack=" + lastAttack
                 + ", speed=" + speed
-                + ", attackSpeed="
-                + attackSpeed
+                + ", attackSpeed=" + attackSpeed
+                + "image=" + image
                 + '}';
     }
 
@@ -129,7 +155,8 @@ public abstract class ASprite {
                 && Double.compare(height, aSprite.height) == 0
                 && isDead == aSprite.isDead && Double.compare(lastAttack, aSprite.lastAttack) == 0
                 && Double.compare(speed, aSprite.speed) == 0
-                && Double.compare(attackSpeed, aSprite.attackSpeed) == 0;
+                && Double.compare(attackSpeed, aSprite.attackSpeed) == 0
+                && Objects.equals(image, aSprite.image);
     }
 
     /**
@@ -140,6 +167,6 @@ public abstract class ASprite {
     @Override
     public int hashCode() {
         return Objects.hash(positionX, positionY, width,
-                height, isDead, lastAttack, speed, attackSpeed);
+                height, isDead, lastAttack, speed, attackSpeed, image);
     }
 }

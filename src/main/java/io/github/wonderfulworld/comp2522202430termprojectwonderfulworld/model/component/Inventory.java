@@ -4,6 +4,8 @@ import io.github.wonderfulworld.comp2522202430termprojectwonderfulworld.model.it
 import java.util.ArrayList;
 import java.util.Objects;
 import lombok.Getter;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 
 /**
  * Represents an inventory for managing items with a defined capacity.
@@ -26,12 +28,19 @@ public class Inventory {
     private final ArrayList<AItem> items = new ArrayList<>();
 
     /**
+     * Properties for quantity and capacity.
+     */
+    private final IntegerProperty quantityProperty = new SimpleIntegerProperty(0);
+    private final IntegerProperty capacityProperty = new SimpleIntegerProperty();
+
+    /**
      * Constructs an Inventory with the specified maximum capacity.
      *
      * @param capacity the maximum number of items the inventory can hold
      */
     public Inventory(final int capacity) {
         this.capacity = capacity;
+        this.capacityProperty.set(capacity);
     }
 
     /**
@@ -44,6 +53,7 @@ public class Inventory {
     public boolean addItem(final AItem item) {
         if (!isFull() && !isInInventory(item)) {
             items.add(item);
+            quantityProperty.set(items.size()); // Update quantity property
             return true;
         }
         return false;
@@ -56,7 +66,11 @@ public class Inventory {
      * @return true if the item was successfully removed, false otherwise
      */
     public boolean removeItem(final AItem item) {
-        return items.remove(item);
+        if (items.remove(item)) {
+            quantityProperty.set(items.size()); // Update quantity property
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -85,6 +99,24 @@ public class Inventory {
      */
     public int getQuantity() {
         return items.size();
+    }
+
+    /**
+     * Property for quantity, used for data binding.
+     *
+     * @return the quantity property
+     */
+    public IntegerProperty quantityProperty() {
+        return quantityProperty;
+    }
+
+    /**
+     * Property for capacity, used for data binding.
+     *
+     * @return the capacity property
+     */
+    public IntegerProperty capacityProperty() {
+        return capacityProperty;
     }
 
     /**

@@ -2,6 +2,7 @@ package io.github.wonderfulworld.comp2522202430termprojectwonderfulworld.core.sp
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.geometry.Rectangle2D;
 import lombok.Getter;
 import java.util.Objects;
 
@@ -111,6 +112,25 @@ public abstract class ASprite {
      * @param delta the time since the last update call
      */
     public void update(final double delta) {
+    }
+
+    /**
+     * Checks if this sprite intersects with another sprite's collision box.
+     *
+     * @param s the sprite to check for intersection with the current sprite
+     * @return True if the collision box of the two sprites intersects, false otherwise.
+     */
+    public boolean intersectsCollisionBox(final ASprite s) {
+        return s.getCollisionBox().intersects(this.getCollisionBox());
+    }
+
+    /**
+     * Returns the collision box of the sprite as a Rectangle2D object.
+     *
+     * @return A Rectangle2D object representing the collision box of the sprite.
+     */
+    public Rectangle2D getCollisionBox() {
+        return new Rectangle2D(positionX, positionY, width, height);
     }
 
     /**

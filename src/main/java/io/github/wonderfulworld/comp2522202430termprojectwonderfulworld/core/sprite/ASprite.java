@@ -1,5 +1,6 @@
 package io.github.wonderfulworld.comp2522202430termprojectwonderfulworld.core.sprite;
 
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import lombok.Getter;
 import java.util.Objects;
@@ -168,5 +169,16 @@ public abstract class ASprite {
     public int hashCode() {
         return Objects.hash(positionX, positionY, width,
                 height, isDead, lastAttack, speed, attackSpeed, image);
+    }
+
+    /**
+     * Render.
+     * <p>
+     * The render method is called every frame. Serves for drawing sprites.
+     *
+     * @param gc The graphics context of the canvas.
+     */
+    public void render(final GraphicsContext gc) {
+        gc.drawImage(image, positionX, positionY);
     }
 }

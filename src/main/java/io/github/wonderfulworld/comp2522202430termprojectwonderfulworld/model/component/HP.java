@@ -1,5 +1,7 @@
 package io.github.wonderfulworld.comp2522202430termprojectwonderfulworld.model.component;
 
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import lombok.Getter;
 import lombok.Setter;
 import java.util.Objects;
@@ -20,9 +22,9 @@ public class HP {
     @Getter @Setter private double initialHealth;
 
     /**
-     * The current health of the character.
+     * The current health of the character, represented as a DoubleProperty.
      */
-    private double currentHealth;
+    private final DoubleProperty currentHealth;
 
     /**
      * Constructs an HP instance with a specified initial health value.
@@ -31,7 +33,7 @@ public class HP {
      */
     public HP(final double health) {
         this.initialHealth = health;
-        this.currentHealth = health;
+        this.currentHealth = new SimpleDoubleProperty(health);
     }
 
     /**
@@ -40,7 +42,7 @@ public class HP {
      * @param health the amount of health to add
      */
     public void addHealth(final double health) {
-        currentHealth = Math.min(currentHealth + health, initialHealth);
+        currentHealth.set(Math.min(currentHealth.get() + health, initialHealth));
     }
 
     /**
@@ -49,7 +51,16 @@ public class HP {
      * @param health the amount of health to reduce
      */
     public void reduceHealth(final double health) {
-        currentHealth = Math.max(currentHealth - health, 0);
+        currentHealth.set(Math.max(currentHealth.get() - health, 0));
+    }
+
+    /**
+     * Gets the current health property for data binding.
+     *
+     * @return the current health property
+     */
+    public DoubleProperty healthProperty() {
+        return currentHealth;
     }
 
     /**
@@ -58,7 +69,16 @@ public class HP {
      * @return the current health value, rounded to the nearest whole number
      */
     public double getHealth() {
-        return Math.round(currentHealth);
+        return currentHealth.get();
+    }
+
+    /**
+     * Sets the current health value.
+     *
+     * @param health the new health value
+     */
+    public void setHealth(final double health) {
+        currentHealth.set(Math.min(health, initialHealth));
     }
 
     /**
@@ -68,12 +88,8 @@ public class HP {
      */
     @Override
     public String toString() {
-        return "HP{"
-                + "initialHealth="
-                + initialHealth
-                + ", currentHealth="
-                + currentHealth
-                + '}';
+        return "HP{" + "initialHealth=" + initialHealth
+                + ", currentHealth=" + currentHealth.get() + '}';
     }
 
     /**
@@ -93,7 +109,7 @@ public class HP {
         }
         HP hp = (HP) object;
         return Double.compare(initialHealth, hp.initialHealth) == 0
-                && Double.compare(currentHealth, hp.currentHealth) == 0;
+                && Double.compare(currentHealth.get(), hp.currentHealth.get()) == 0;
     }
 
     /**
@@ -103,6 +119,6 @@ public class HP {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(initialHealth, currentHealth);
+        return Objects.hash(initialHealth, currentHealth.get());
     }
 }

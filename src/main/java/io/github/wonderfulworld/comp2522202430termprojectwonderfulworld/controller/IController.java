@@ -24,6 +24,15 @@ public interface IController {
     }
 
     /**
+     * Handles the click event for starting the game.
+     *
+     * @param e the mouse event triggered by the button click
+     */
+    default void gameStartButton(MouseEvent e) {
+        StateManager.startGame(false);
+    }
+
+    /**
      * Handles the click event for exiting the game.
      *
      * @param e the mouse event triggered by the button click

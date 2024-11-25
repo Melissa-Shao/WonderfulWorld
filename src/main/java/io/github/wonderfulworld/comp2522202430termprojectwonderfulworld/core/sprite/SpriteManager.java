@@ -1,5 +1,7 @@
 package io.github.wonderfulworld.comp2522202430termprojectwonderfulworld.core.sprite;
 
+import javafx.scene.canvas.GraphicsContext;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Objects;
@@ -41,6 +43,17 @@ public class SpriteManager {
         // Updated each sprite with the given time delta
         for (ASprite sprite : sprites) {
             sprite.update(delta);
+        }
+    }
+
+    /**
+     * Render.
+     *
+     * @param gc The graphics context.
+     */
+    public void render(final GraphicsContext gc) {
+        for (ASprite sprite : sprites) {
+            sprite.render(gc);
         }
     }
 

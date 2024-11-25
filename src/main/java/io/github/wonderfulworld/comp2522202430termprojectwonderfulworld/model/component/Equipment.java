@@ -5,6 +5,8 @@ import io.github.wonderfulworld.comp2522202430termprojectwonderfulworld.model.it
 import io.github.wonderfulworld.comp2522202430termprojectwonderfulworld.model.items.equipment.Weapon;
 import java.util.Objects;
 import lombok.Getter;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 
 /**
  * Represents a character's equipped items, including a weapon and armor.
@@ -19,14 +21,32 @@ import lombok.Getter;
 public class Equipment {
 
     /**
-     * The weapon currently equipped by the character.
+     * Property for the weapon currently equipped by the character.
      */
-    private Weapon weapon;
+    private final ObjectProperty<Weapon> weaponProperty = new SimpleObjectProperty<>();
 
     /**
-     * The armor currently equipped by the character.
+     * Property for the armor currently equipped by the character.
      */
-    private Armor armor;
+    private final ObjectProperty<Armor> armorProperty = new SimpleObjectProperty<>();
+
+    /**
+     * Gets the currently equipped weapon.
+     *
+     * @return the equipped weapon, or null if no weapon is equipped
+     */
+    public Weapon getWeapon() {
+        return weaponProperty.get();
+    }
+
+    /**
+     * Gets the currently equipped armor.
+     *
+     * @return the equipped armor, or null if no armor is equipped
+     */
+    public Armor getArmor() {
+        return armorProperty.get();
+    }
 
     /**
      * Equips the specified item for the character, replacing any existing item of the same type.
@@ -41,23 +61,23 @@ public class Equipment {
         inventory.removeItem(item);
 
         // If the item is a weapon
-        if (item instanceof Weapon) {
+        if (item instanceof Weapon weapon) {
             // If the player has a weapon before, put the old weapon into inventory
-            if (weapon != null) {
-                inventory.addItem(weapon);
+            if (weaponProperty.get() != null) {
+                inventory.addItem(weaponProperty.get());
             }
             // Put on the new weapon
-            weapon = (Weapon) item;
+            weaponProperty.set(weapon);
         }
 
         // If the item is an armor
-        if (item instanceof Armor) {
+        if (item instanceof Armor armor) {
             // If the player has an armor before, put the old armor into inventory
-            if (armor != null) {
-                inventory.addItem(armor);
+            if (armorProperty.get() != null) {
+                inventory.addItem(armorProperty.get());
             }
             // Put on the new armor
-            armor = (Armor) item;
+            armorProperty.set(armor);
         }
     }
 
@@ -71,34 +91,52 @@ public class Equipment {
      */
     public void unsetEquipment(final AEquipment item, final Inventory inventory) {
         // If the item is a weapon
-        if (item instanceof Weapon) {
+        if (item instanceof Weapon weapon) {
             // If the player has no current weapon, return none
-            if (weapon == null) {
+            if (weaponProperty.get() == null) {
                 return;
             }
             // If the weapon is the same with item, put the weapon back into inventory
-            if (weapon.equals(item)) {
+            if (weaponProperty.get().equals(weapon)) {
                 if (inventory.addItem(item)) {
                     // Set the current weapon to be null
-                    weapon = null;
+                    weaponProperty.set(null);
                 }
             }
         }
 
         // If the item is an armor
-        if (item instanceof Armor) {
+        if (item instanceof Armor armor) {
             // If the player has no current armor, return none
-            if (armor == null) {
+            if (armorProperty.get() == null) {
                 return;
             }
             // If the armor is the same with item, put the armor back into inventory
-            if (armor.equals(item)) {
+            if (armorProperty.get().equals(armor)) {
                 if (inventory.addItem(item)) {
                     // Set the current armor to be null
-                    armor = null;
+                    armorProperty.set(null);
                 }
             }
         }
+    }
+
+    /**
+     * Property for weapon, used for data binding.
+     *
+     * @return the weapon property
+     */
+    public ObjectProperty<Weapon> weaponProperty() {
+        return weaponProperty;
+    }
+
+    /**
+     * Property for armor, used for data binding.
+     *
+     * @return the armor property
+     */
+    public ObjectProperty<Armor> armorProperty() {
+        return armorProperty;
     }
 
     /**
@@ -108,7 +146,8 @@ public class Equipment {
      */
     @Override
     public String toString() {
-        return "Equipment{" + "weapon=" + weapon + ", armor=" + armor + '}';
+        return "Equipment{" + "weapon=" + weaponProperty.get() + ", armor="
+                + armorProperty.get() + '}';
     }
 
     /**
@@ -127,7 +166,8 @@ public class Equipment {
             return false;
         }
         Equipment equipment = (Equipment) object;
-        return Objects.equals(weapon, equipment.weapon) && Objects.equals(armor, equipment.armor);
+        return Objects.equals(weaponProperty.get(), equipment.weaponProperty.get())
+                && Objects.equals(armorProperty.get(), equipment.armorProperty.get());
     }
 
     /**
@@ -137,6 +177,5 @@ public class Equipment {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(weapon, armor);
-    }
+        return Objects.hash(weaponProperty.get(), armorProperty.get());    }
 }

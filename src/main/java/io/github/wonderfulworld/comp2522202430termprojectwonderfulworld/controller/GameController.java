@@ -76,4 +76,13 @@ public class GameController extends AController implements IController {
      */
     public void playerAttack() {
     }
+
+    /**
+     * A method is called by the main timer every frame to update the state of the controller.
+     *
+     * @param delta the time elapsed since the last tick (in seconds)
+     */
+    @Override
+    public void tick(final double delta) {
+    }
 }

@@ -1,5 +1,6 @@
 package io.github.wonderfulworld.comp2522202430termprojectwonderfulworld.controller;
 import io.github.wonderfulworld.comp2522202430termprojectwonderfulworld.core.StateManager;
+import io.github.wonderfulworld.comp2522202430termprojectwonderfulworld.view.GameMenuView;
 import javafx.scene.input.KeyEvent;
 
 /**
@@ -18,6 +19,8 @@ public class GameMenuController extends AController implements IController {
             return;
         }
         wasInitialized = true;
+        view = new GameMenuView(this);
+        view.init();
     }
 
     /**
@@ -31,6 +34,15 @@ public class GameMenuController extends AController implements IController {
         if (code.equals("ESCAPE")) {
             StateManager.continueGame();
         }
+    }
+
+    /**
+     * A method is called by the main timer every frame to update the state of the controller.
+     *
+     * @param delta the time elapsed since the last tick (in seconds)
+     */
+    @Override
+    public void tick(final double delta) {
     }
 
     /**

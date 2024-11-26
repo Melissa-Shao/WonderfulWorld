@@ -2,6 +2,7 @@ package io.github.wonderfulworld.comp2522202430termprojectwonderfulworld.model.e
 
 import io.github.wonderfulworld.comp2522202430termprojectwonderfulworld.core.sprite.ASprite;
 import io.github.wonderfulworld.comp2522202430termprojectwonderfulworld.model.IDamageable;
+import javafx.geometry.Rectangle2D;
 import java.util.List;
 import java.util.Objects;
 import java.util.Arrays;
@@ -140,6 +141,54 @@ public class Monster extends ASprite implements IDamageable  {
     }
 
     /**
+     * Checks if the target is within the monster's view radius.
+     *
+     * @param s the target to check
+     * @return true if the target is within the viewing radius, false otherwise
+     */
+    public boolean intersectsRadiusViewBox(final ASprite s) {
+        return s.getCollisionBox().intersects(this.getRadiusViewCollisionBox());
+    }
+
+    /**
+     * Checks if the target is within the monster's attack radius.
+     *
+     * @param s the target to check
+     * @return true if the target is within the damage radius, false otherwise
+     */
+    public boolean intersectsDamageBox(final ASprite s) {
+        return s.getCollisionBox().intersects(this.getDamageRadiusBox());
+    }
+
+    /**
+     * Gets damage radius box.
+     *
+     * @return The damage radius box.
+     */
+    public Rectangle2D getDamageRadiusBox() {
+
+        return new Rectangle2D(
+                positionX - damageRadius,
+                positionY - damageRadius,
+                width + (2 * damageRadius),
+                height + (2 * damageRadius));
+    }
+
+    /**
+     * Gets radius view collision box.
+     *
+     * @return The radius view collision box.
+     */
+    public Rectangle2D getRadiusViewCollisionBox() {
+
+        return new Rectangle2D(
+                positionX - viewingRadius,
+                positionY - viewingRadius,
+                width + (2 * viewingRadius),
+                height + (2 * viewingRadius));
+    }
+
+    /**
      * Sets a target player for the monster to pursue.
      *
      * @param player the target player to pursue
@@ -183,7 +232,6 @@ public class Monster extends ASprite implements IDamageable  {
             }
         }
     }
-
 
     /**
      * Executes random movement when not in pursuit of a target.
@@ -236,36 +284,6 @@ public class Monster extends ASprite implements IDamageable  {
         } else {
             moveToAim(delta);
         }
-    }
-
-    /**
-     * Checks if the target is within the monster's attack radius.
-     *
-     * @param s the target to check
-     * @return true if the target is within the damage radius, false otherwise
-     */
-    public boolean intersectsDamageBox(final IDamageable s) {
-        if (s instanceof ASprite sprite) {
-            double distance = Math.sqrt(Math.pow(sprite.getPositionX() - positionX, 2)
-                    + Math.pow(sprite.getPositionY() - positionY, 2));
-            return distance <= damageRadius;
-        }
-        return false;
-    }
-
-    /**
-     * Checks if the target is within the monster's view radius.
-     *
-     * @param s the target to check
-     * @return true if the target is within the viewing radius, false otherwise
-     */
-    public boolean intersectsRadiusViewBox(final IDamageable s) {
-        if (s instanceof ASprite sprite) {
-            double distance = Math.sqrt(Math.pow(sprite.getPositionX() - positionX, 2)
-                    + Math.pow(sprite.getPositionY() - positionY, 2));
-            return distance <= viewingRadius;
-        }
-        return false;
     }
 
     /**

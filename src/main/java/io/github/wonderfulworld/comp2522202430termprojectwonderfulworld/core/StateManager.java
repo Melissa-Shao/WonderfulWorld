@@ -5,6 +5,7 @@ import io.github.wonderfulworld.comp2522202430termprojectwonderfulworld.controll
 import io.github.wonderfulworld.comp2522202430termprojectwonderfulworld.controller.InventoryController;
 import io.github.wonderfulworld.comp2522202430termprojectwonderfulworld.controller.GameOverController;
 import io.github.wonderfulworld.comp2522202430termprojectwonderfulworld.controller.GameController;
+import io.github.wonderfulworld.comp2522202430termprojectwonderfulworld.model.GameModel;
 import javafx.application.Platform;
 import javafx.stage.Stage;
 import java.util.HashMap;
@@ -31,6 +32,7 @@ public final class StateManager {
     private static final HashMap<GameState, AController> STATES = new HashMap<>();
     private static AController currentController;
     private static Stage stage;
+    private static GameLoop gameLoop;
 
     /**
      * Private constructor to prevent instantiation of this utility class.
@@ -40,6 +42,7 @@ public final class StateManager {
     private StateManager() {
         throw new UnsupportedOperationException("Utility class should not be instantiated.");
     }
+
     /**
      * Init.
      * <p>
@@ -57,9 +60,10 @@ public final class StateManager {
         STATES.put(GameState.INVENTORY, new InventoryController());
         STATES.put(GameState.GAME_OVER, new GameOverController());
 
+        // Init Game Loop
+        StateManager.gameLoop = new GameLoop();
         // Initial State
         goToMainMenu();
-
         // Open and Start game
         stage.show();
     }
@@ -74,6 +78,8 @@ public final class StateManager {
 
         // Reset all controls and views when restarting the game
         STATES.forEach((key, value) -> value.reset());
+        GameModel gameModel = GameModel.getInstance();
+        gameModel.init(fromSave);
         currentController.init();
         System.out.println("Game starts.");
     }
@@ -84,6 +90,7 @@ public final class StateManager {
     public static void continueGame() {
         currentController = STATES.get(GameState.GAME);
         currentController.init();
+        stage.setScene(currentController.getView().getScene());
         System.out.println("Game continues.");
     }
 
@@ -93,6 +100,7 @@ public final class StateManager {
     public static void goToMainMenu() {
         currentController = STATES.get(GameState.MENU);
         currentController.init();
+        stage.setScene(currentController.getView().getScene());
         System.out.println("Go to Main Menu.");
     }
 
@@ -102,6 +110,7 @@ public final class StateManager {
     public static void goToGameMenu() {
         currentController = STATES.get(GameState.GAME_MENU);
         currentController.init();
+        stage.setScene(currentController.getView().getScene());
         System.out.println("Go to Game Menu.");
     }
 
@@ -112,6 +121,8 @@ public final class StateManager {
     public static void goToInventory() {
         currentController = STATES.get(GameState.INVENTORY);
         currentController.init();
+        stage.setScene(currentController.getView().getScene());
+        System.out.println("Go to Inventory.");
     }
 
     /**
@@ -120,7 +131,16 @@ public final class StateManager {
     public static void gameOver() {
         currentController = STATES.get(GameState.GAME_OVER);
         currentController.init();
+        stage.setScene(currentController.getView().getScene());
         System.out.println("Game Over! The player has died.");
+    }
+
+    /**
+     * Resets the scene (like moving in between portals).
+     */
+    public static void resetScene() {
+        stage.setScene(currentController.getView().getScene());
+        System.out.println("Resetting game.");
     }
 
     /**
@@ -139,5 +159,15 @@ public final class StateManager {
      */
     public static AController getCurrentState() {
         return currentController;
+    }
+
+    /**
+     * Returns a string representation of this StateManager.
+     *
+     * @return the representation of the StateManager as a string
+     */
+    @Override
+    public String toString() {
+        return "StateManager{}";
     }
 }

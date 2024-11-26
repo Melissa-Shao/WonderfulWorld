@@ -15,12 +15,12 @@ public class Tile {
     /**
      * Tile properties.
      */
-    @Getter
     private final Image image;
     /**
      * -- GETTER --
      * Checks whether the tile is passable.
      */
+    @Getter
     private final boolean passable;
 
     /**

@@ -9,6 +9,10 @@ import io.github.wonderfulworld.comp2522202430termprojectwonderfulworld.model.it
 import io.github.wonderfulworld.comp2522202430termprojectwonderfulworld.model.items.recovery.AEquipment;
 import io.github.wonderfulworld.comp2522202430termprojectwonderfulworld.core.StateManager;
 import io.github.wonderfulworld.comp2522202430termprojectwonderfulworld.model.items.recovery.HealthBottle;
+import javafx.geometry.Rectangle2D;
+import javafx.scene.image.Image;
+import java.nio.file.Path;
+import java.util.HashMap;
 import java.util.Objects;
 import lombok.Getter;
 
@@ -21,6 +25,17 @@ import lombok.Getter;
  * @version 2024
  */
 public class Player extends ASprite implements IDamageable {
+
+    /**
+     * The enum Direction.
+     */
+    private enum Direction {
+        TOP,
+        RIGHT,
+        BOTTOM,
+        LEFT
+    }
+
     /**
      * Combat-related constants.
      */
@@ -28,6 +43,21 @@ public class Player extends ASprite implements IDamageable {
     private static final double ATTACK_SPEED = 300; // Attack speed in milliseconds
     // Base percentage for damage reduction calculations
     private static final int PERCENTAGE_BASE = 100;
+    private static final double LEG_HEIGHT = 16.0;
+
+    /**
+     * The Images.
+     * <p>
+     * The images of the character in different directions.
+     */
+    private final HashMap<Direction, Image> images = new HashMap<>();
+
+    /**
+     * The Current direction.
+     * <p>
+     * The current direction of the character.
+     */
+    private Direction currentDirection;
 
     /**
      * Player status variables.
@@ -69,6 +99,20 @@ public class Player extends ASprite implements IDamageable {
         this.inventory = new Inventory(MAX_INVENTORY_SIZE); // Inventory with a capacity of 14 items
         this.equipment = new Equipment();
         this.isDead = false;
+
+        // Setting Up Direction Images
+        images.put(Direction.TOP, new Image(Path.of("config/player/player_top.png")
+                .toUri().toString()));
+        images.put(Direction.RIGHT, new Image(Path.of("config/player/player_right.png")
+                .toUri().toString()));
+        images.put(Direction.BOTTOM, new Image(Path.of("config/player/player_bottom.png")
+                .toUri().toString()));
+        images.put(Direction.LEFT, new Image(Path.of("config/player/player_left.png")
+                .toUri().toString()));
+
+        // Setting Up Default Image
+        currentDirection = Direction.BOTTOM;
+        setImage(images.get(currentDirection));
     }
 
     /**
@@ -140,12 +184,12 @@ public class Player extends ASprite implements IDamageable {
     }
 
     /**
-     * Unequips an item, removing its stats from the player's attributes.
+     * UnEquips an item, removing its stats from the player's attributes.
      *
      * @param item the equipment to remove
      */
     public void unsetEquipment(final AEquipment item) {
-        equipment.unsetEquipment(item, inventory); // Unequip item and adjust stats
+        equipment.unsetEquipment(item, inventory); // UnEquip item and adjust stats
     }
 
     /**
@@ -231,6 +275,106 @@ public class Player extends ASprite implements IDamageable {
     public AItem getCurrentArmor() {
         return equipment.getArmor();
     }
+
+    /**
+     * Checks if this sprite intersects with another sprite's attack area.
+     *
+     * @param s the sprite to check for intersection with the attack area
+     * @return True if the sprite intersects with the attack area, false otherwise.
+     */
+    public boolean intersectsAttackBox(final ASprite s) {
+        return s.getCollisionBox().intersects(this.getAttackCollisionBox());
+    }
+
+    /**
+     * Checks if this sprite intersects with another sprite's movement area.
+     *
+     * @param s the sprite to check for intersection with the movement area
+     * @return True if the sprite intersects with the movement area, false otherwise.
+     */
+    public boolean intersectsMoveBox(final ASprite s) {
+        return s.getCollisionBox().intersects(this.getMoveBox());
+    }
+
+    /**
+     * Returns the attack area of the sprite as a Rectangle2D object.
+     *
+     * @return A Rectangle2D object representing the attack area of the sprite.
+     */
+    public Rectangle2D getAttackCollisionBox() {
+        return switch (currentDirection) {
+            case TOP -> new Rectangle2D(positionX,
+                    positionY - getDamageRadius(), width, getDamageRadius());
+            case RIGHT -> new Rectangle2D(positionX
+                    + width, positionY, getDamageRadius(), height);
+            case BOTTOM -> new Rectangle2D(positionX,
+                    positionY + height, width, getDamageRadius());
+            case LEFT -> new Rectangle2D(positionX
+                    - getDamageRadius(), positionY, getDamageRadius(), height);
+        };
+    }
+
+    /**
+     * Returns the movement area of the sprite's legs as a Rectangle2D object.
+     *
+     * @return A Rectangle2D object representing the movement area of the sprite's legs.
+     */
+    public Rectangle2D getMoveBox() {
+        return new Rectangle2D(positionX, positionY + height - LEG_HEIGHT, width, LEG_HEIGHT);
+    }
+
+    /**
+     * Moves the sprite upward by a specified path.
+     *
+     * @param path the distance to move upward
+     */
+    public void moveUp(final int path) {
+        if (currentDirection != Direction.TOP) {
+            currentDirection = Direction.TOP;
+            setImage(images.get(currentDirection));
+        }
+        positionY -= path;
+    }
+
+    /**
+     * Moves the sprite to the right by a specified path.
+     *
+     * @param path the distance to move to the right
+     */
+    public void moveRight(final int path) {
+        if (currentDirection != Direction.RIGHT) {
+            currentDirection = Direction.RIGHT;
+            setImage(images.get(currentDirection));
+        }
+        positionX += path;
+    }
+
+    /**
+     * Moves the sprite downward by a specified path.
+     *
+     * @param path the distance to move downward
+     */
+    public void moveDown(final int path) {
+        if (currentDirection != Direction.BOTTOM) {
+            currentDirection = Direction.BOTTOM;
+            setImage(images.get(currentDirection));
+        }
+        positionY += path;
+    }
+
+    /**
+     * Moves the sprite to the left by a specified path.
+     *
+     * @param path the distance to move to the left
+     */
+    public void moveLeft(final int path) {
+        if (currentDirection != Direction.LEFT) {
+            currentDirection = Direction.LEFT;
+            setImage(images.get(currentDirection));
+        }
+        positionX -= path;
+    }
+
 
     /**
      * Returns a string representation of this Player.

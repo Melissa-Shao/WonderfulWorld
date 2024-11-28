@@ -81,9 +81,9 @@ public class Portal extends ASprite {
     }
 
     /**
-     * Returns a string representation of this Portal.
+     * Returns the hash code of this Portal.
      *
-     * @return the representation of the Portal as a string
+     * @return the hash code value of the Portal as an integer
      */
     @Override
     public int hashCode() {

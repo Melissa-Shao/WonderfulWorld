@@ -1,4 +1,7 @@
 package io.github.wonderfulworld.comp2522202430termprojectwonderfulworld.controller;
+import io.github.wonderfulworld.comp2522202430termprojectwonderfulworld.view.AView;
+import lombok.Getter;
+
 import java.util.Objects;
 
 /**
@@ -14,6 +17,11 @@ public abstract class AController {
     protected boolean wasInitialized;
 
     /**
+     * Refers to the view associated with this controller.
+     */
+    @Getter protected AView view;
+
+    /**
      * Resets controller state.
      */
     public void reset() {
@@ -24,6 +32,13 @@ public abstract class AController {
      * An abstract method to initialize the controllers.
      */
     public abstract void init();
+
+    /**
+     * A method is called by the main timer every frame to update the state of the controller.
+     *
+     * @param delta the time elapsed since the last tick (in seconds)
+     */
+    public abstract void tick(double delta);
 
     /**
      * Compares this AController with another object for equality.

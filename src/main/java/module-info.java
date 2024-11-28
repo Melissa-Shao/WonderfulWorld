@@ -11,4 +11,15 @@ module io.github.wonderfulworld.comp2522202430termprojectwonderfulworld {
 
     opens io.github.wonderfulworld.comp2522202430termprojectwonderfulworld to javafx.fxml;
     exports io.github.wonderfulworld.comp2522202430termprojectwonderfulworld;
+    exports io.github.wonderfulworld.comp2522202430termprojectwonderfulworld.model.component;
+    exports io.github.wonderfulworld.comp2522202430termprojectwonderfulworld.model.items.equipment;
+    exports io.github.wonderfulworld.comp2522202430termprojectwonderfulworld.model.items;
+    exports io.github.wonderfulworld.comp2522202430termprojectwonderfulworld.model.items.recovery;
+    exports io.github.wonderfulworld.comp2522202430termprojectwonderfulworld.model.entity;
+    exports io.github.wonderfulworld.comp2522202430termprojectwonderfulworld.model;
+    exports io.github.wonderfulworld.comp2522202430termprojectwonderfulworld.core.sprite;
+
+
+
+
 }

@@ -18,8 +18,4 @@ module io.github.wonderfulworld.comp2522202430termprojectwonderfulworld {
     exports io.github.wonderfulworld.comp2522202430termprojectwonderfulworld.model.entity;
     exports io.github.wonderfulworld.comp2522202430termprojectwonderfulworld.model;
     exports io.github.wonderfulworld.comp2522202430termprojectwonderfulworld.core.sprite;
-
-
-
-
 }

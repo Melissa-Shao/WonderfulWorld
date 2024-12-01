@@ -1,0 +1,40 @@
+{
+  "id": 1,
+  "name": "Map 1",
+  "portals": [
+    {
+      "id": 1,
+      "positionX": 40,
+      "positionY": 2
+    }
+  ],
+  "items": [
+    {
+      "id": 1,
+      "positionX": 20,
+      "positionY": 9
+    },
+    {
+      "id": 3,
+      "positionX": 10,
+      "positionY": 13
+    },
+    {
+      "id": 5,
+      "positionX": 15,
+      "positionY": 9
+    }
+  ],
+  "monsters": [
+    {
+      "id": 1,
+      "positionX": 18,
+      "positionY": 3
+    },
+    {
+      "id": 3,
+      "positionX": 20,
+      "positionY": 11
+    }
+  ]
+}

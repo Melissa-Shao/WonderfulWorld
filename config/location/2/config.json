@@ -1,0 +1,40 @@
+{
+  "id": 2,
+  "name": "Dark forest 2",
+  "portals": [
+    {
+      "id": 2,
+      "positionX": 13,
+      "positionY": 4
+    }
+  ],
+  "items": [
+    {
+      "id": 1,
+      "positionX": 6,
+      "positionY": 9
+    },
+    {
+      "id": 3,
+      "positionX": 25,
+      "positionY": 13
+    },
+    {
+      "id": 5,
+      "positionX": 5,
+      "positionY": 13
+    }
+  ],
+  "monsters": [
+    {
+      "id": 1,
+      "positionX": 24,
+      "positionY": 6
+    },
+    {
+      "id": 2,
+      "positionX": 35,
+      "positionY": 11
+    }
+  ]
+}

@@ -120,6 +120,7 @@ public abstract class ASprite {
      * @param s the sprite to check for intersection with the current sprite
      * @return True if the collision box of the two sprites intersects, false otherwise.
      */
+    @SuppressWarnings("unused") // Method intended for collision detection in subclasses
     public boolean intersectsCollisionBox(final ASprite s) {
         return s.getCollisionBox().intersects(this.getCollisionBox());
     }

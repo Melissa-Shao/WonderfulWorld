@@ -135,51 +135,84 @@ public class GameController extends AController implements IController {
         Rectangle2D moveBox = player.getMoveBox();
         int path = (int) (player.getSpeed() * delta);
 
-        if (input.contains("A") && player.getPositionX() - path > 0) {
-            int tileMinX = TileMap.convertPixelToTile(moveBox.getMinX() - path);
-            int tileMinY = TileMap.convertPixelToTile(moveBox.getMinY());
-            int tileMaxY = TileMap.convertPixelToTile(moveBox.getMaxY());
+        handleHorizontalMovement(moveBox, path);
+        handleVerticalMovement(moveBox, path);
+    }
 
-            if (tileMap.getTile(tileMinX, tileMinY).isPassable()
-                    && tileMap.getTile(tileMinX, tileMaxY).isPassable()) {
-                player.moveLeft(path);
-            }
+    private void handleHorizontalMovement(final Rectangle2D moveBox, final int path) {
+        // Handle left movement
+        if (input.contains("A") && canMoveLeft(moveBox, path)) {
+            player.moveLeft(path);
         }
 
-        if (input.contains("D")
-                && player.getPositionX() + player.getWidth() + path < tileMap.getMapWidth()) {
-            int tileMinY = TileMap.convertPixelToTile(moveBox.getMinY());
-            int tileMaxY = TileMap.convertPixelToTile(moveBox.getMaxY());
-            int tileMaxX = TileMap.convertPixelToTile(moveBox.getMaxX() + path);
+        // Handle right movement
+        if (input.contains("D") && canMoveRight(moveBox, path)) {
+            player.moveRight(path);
+        }
+    }
 
-            if (tileMap.getTile(tileMaxX, tileMinY).isPassable()
-                    && tileMap.getTile(tileMaxX, tileMaxY).isPassable()) {
-                player.moveRight(path);
-            }
+    private void handleVerticalMovement(final Rectangle2D moveBox, final int path) {
+        // Handle upward movement
+        if (input.contains("W") && canMoveUp(moveBox, path)) {
+            player.moveUp(path);
         }
 
-        if (input.contains("W") && player.getPositionY() - path > 0) {
-            int tileMinX = TileMap.convertPixelToTile(moveBox.getMinX());
-            int tileMinY = TileMap.convertPixelToTile(moveBox.getMinY() - path);
-            int tileMaxX = TileMap.convertPixelToTile(moveBox.getMaxX());
+        // Handle downward movement
+        if (input.contains("S") && canMoveDown(moveBox, path)) {
+            player.moveDown(path);
+        }
+    }
 
-            if (tileMap.getTile(tileMinX, tileMinY).isPassable()
-                    && tileMap.getTile(tileMaxX, tileMinY).isPassable()) {
-                player.moveUp(path);
-            }
+    private boolean canMoveLeft(final Rectangle2D moveBox, final int path) {
+        if (player.getPositionX() - path <= 0) {
+            return false;
         }
 
-        if (input.contains("S")
-                && player.getPositionY() + player.getHeight() + path < tileMap.getMapHeight()) {
-            int tileMinX = TileMap.convertPixelToTile(moveBox.getMinX());
-            int tileMaxY = TileMap.convertPixelToTile(moveBox.getMaxY() + path);
-            int tileMaxX = TileMap.convertPixelToTile(moveBox.getMaxX());
+        int tileMinX = TileMap.convertPixelToTile(moveBox.getMinX() - path);
+        int tileMinY = TileMap.convertPixelToTile(moveBox.getMinY());
+        int tileMaxY = TileMap.convertPixelToTile(moveBox.getMaxY());
 
-            if (tileMap.getTile(tileMinX, tileMaxY).isPassable()
-                    && tileMap.getTile(tileMaxX, tileMaxY).isPassable()) {
-                player.moveDown(path);
-            }
+        return tileMap.getTile(tileMinX, tileMinY).isPassable()
+                && tileMap.getTile(tileMinX, tileMaxY).isPassable();
+    }
+
+    private boolean canMoveRight(final Rectangle2D moveBox, final int path) {
+        if (player.getPositionX() + player.getWidth() + path >= tileMap.getMapWidth()) {
+            return false;
         }
+
+        int tileMinY = TileMap.convertPixelToTile(moveBox.getMinY());
+        int tileMaxY = TileMap.convertPixelToTile(moveBox.getMaxY());
+        int tileMaxX = TileMap.convertPixelToTile(moveBox.getMaxX() + path);
+
+        return tileMap.getTile(tileMaxX, tileMinY).isPassable()
+                && tileMap.getTile(tileMaxX, tileMaxY).isPassable();
+    }
+
+    private boolean canMoveUp(final Rectangle2D moveBox, final int path) {
+        if (player.getPositionY() - path <= 0) {
+            return false;
+        }
+
+        int tileMinX = TileMap.convertPixelToTile(moveBox.getMinX());
+        int tileMinY = TileMap.convertPixelToTile(moveBox.getMinY() - path);
+        int tileMaxX = TileMap.convertPixelToTile(moveBox.getMaxX());
+
+        return tileMap.getTile(tileMinX, tileMinY).isPassable()
+                && tileMap.getTile(tileMaxX, tileMinY).isPassable();
+    }
+
+    private boolean canMoveDown(final Rectangle2D moveBox, final int path) {
+        if (player.getPositionY() + player.getHeight() + path >= tileMap.getMapHeight()) {
+            return false;
+        }
+
+        int tileMinX = TileMap.convertPixelToTile(moveBox.getMinX());
+        int tileMaxY = TileMap.convertPixelToTile(moveBox.getMaxY() + path);
+        int tileMaxX = TileMap.convertPixelToTile(moveBox.getMaxX());
+
+        return tileMap.getTile(tileMinX, tileMaxY).isPassable()
+                && tileMap.getTile(tileMaxX, tileMaxY).isPassable();
     }
 
     /**
@@ -228,13 +261,17 @@ public class GameController extends AController implements IController {
      * Checks the intersections.
      */
     private void checkIntersections() {
+        handleItemIntersections();
+        handleMonsterIntersections();
+        handlePortalIntersections();
+    }
+
+    private void handleItemIntersections() {
         ArrayList<AItem> takenItems = new ArrayList<>();
 
         for (AItem item : items) {
-            if (player.intersectsMoveBox(item)) {
-                if (item.take(player)) {
-                    takenItems.add(item);
-                }
+            if (player.intersectsMoveBox(item) && item.take(player)) {
+                takenItems.add(item);
             }
         }
 
@@ -243,31 +280,31 @@ public class GameController extends AController implements IController {
             spriteManager.removeSprite(item);
             items.remove(item);
         }
+    }
+
+    private void handleMonsterIntersections() {
         for (Monster monster : monsters) {
             if (monster.intersectsRadiusViewBox(player)) {
                 monster.setAim(player);
             }
         }
+    }
+
+    private void handlePortalIntersections() {
         for (Portal portal : portals) {
             if (player.intersectsMoveBox(portal)) {
-                portal.activate();
-
-                for (Monster monster : monsters) {
-                    monster.offCombat();
-                }
-                wasInitialized = false;
-                init();
-                StateManager.resetScene();
+                handlePortalActivation(portal);
                 return;
             }
         }
     }
 
-    /**
-     * Reset Input.
-     */
-    private void resetInput() {
-        input = new ArrayList<>();
+    private void handlePortalActivation(final Portal portal) {
+        portal.activate();
+        monsters.forEach(Monster::offCombat);
+        wasInitialized = false;
+        init();
+        StateManager.resetScene();
     }
 
     /**
@@ -295,7 +332,8 @@ public class GameController extends AController implements IController {
 
     /**
      * Compares this GameController with another object for equality.
-     * Two GameController objects are considered equal if they have the same values for all properties,
+     * Two GameController objects are considered equal
+     * if they have the same values for all properties,
      * as well as superclass properties.
      *
      * @param o the object to compare with this GameController
@@ -313,7 +351,13 @@ public class GameController extends AController implements IController {
             return false;
         }
         GameController that = (GameController) o;
-        return Objects.equals(input, that.input) && Objects.equals(player, that.player) && Objects.equals(tileMap, that.tileMap) && Objects.equals(monsters, that.monsters) && Objects.equals(items, that.items) && Objects.equals(portals, that.portals) && Objects.equals(spriteManager, that.spriteManager) && Objects.equals(canvasRoot, that.canvasRoot);
+        return Objects.equals(input, that.input) && Objects.equals(player, that.player)
+                && Objects.equals(tileMap, that.tileMap)
+                && Objects.equals(monsters, that.monsters)
+                && Objects.equals(items, that.items)
+                && Objects.equals(portals, that.portals)
+                && Objects.equals(spriteManager, that.spriteManager)
+                && Objects.equals(canvasRoot, that.canvasRoot);
     }
 
     /**
@@ -323,7 +367,8 @@ public class GameController extends AController implements IController {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), input, player, tileMap, monsters, items, portals, spriteManager, canvasRoot);
+        return Objects.hash(super.hashCode(), input, player, tileMap,
+                monsters, items, portals, spriteManager, canvasRoot);
     }
 
     /**

@@ -46,44 +46,74 @@ public class InventoryController extends AController implements IController {
      */
     @Override
     public void keyPress(final KeyEvent e) {
-        Player player = GameModel.getInstance().getPlayer();
-        Inventory inventory = player.getInventory();
         String code = e.getCode().toString();
 
         switch (code) {
             case "ESCAPE" -> StateManager.goToMainMenu();
             case "I" -> StateManager.continueGame();
-            case "J" -> {
-                if (e.getTarget() instanceof ItemView) {
-                    AItem item = ((ItemView) e.getTarget()).getItem();
-                    if (item instanceof AEquipment) {
-                        if (inventory.isInInventory(item)) {
-                            ((AEquipment) item).equip(player);
-                        } else {
-                            ((AEquipment) item).unequip(player);
-                        }
-                    }
-                }
-            }
-            case "K" -> {
-                if (e.getTarget() instanceof ItemView) {
-                    AItem item = ((ItemView) e.getTarget()).getItem();
-                    if (item != null) {
-                        ((HealthBottle) item).use(player);
-                    }
-                }
-            }
-            case "L" -> {
-                if (e.getTarget() instanceof ItemView) {
-                    AItem item = ((ItemView) e.getTarget()).getItem();
-                    if (item != null) {
-                        item.drop(player);
-                    }
-                }
-            }
+            case "J" -> handleEquipmentToggle(e);
+            case "K" -> handleHealthBottleUse(e);
+            case "L" -> handleItemDrop(e);
             default -> {
                 // Do nothing for unhandled keys
             }
+        }
+    }
+
+    /**
+     * Handles equipping and un equipping items.
+     *
+     * @param e the key event containing the target item view
+     */
+    private void handleEquipmentToggle(final KeyEvent e) {
+        if (!(e.getTarget() instanceof ItemView)) {
+            return;
+        }
+
+        AItem item = ((ItemView) e.getTarget()).getItem();
+        if (!(item instanceof AEquipment equipment)) {
+            return;
+        }
+
+        Player player = GameModel.getInstance().getPlayer();
+        Inventory inventory = player.getInventory();
+
+        if (inventory.isInInventory(item)) {
+            equipment.equip(player);
+        } else {
+            equipment.unequip(player);
+        }
+    }
+
+    /**
+     * Handles using health bottles.
+     *
+     * @param e the key event containing the target item view
+     */
+    private void handleHealthBottleUse(final KeyEvent e) {
+        if (!(e.getTarget() instanceof ItemView)) {
+            return;
+        }
+
+        AItem item = ((ItemView) e.getTarget()).getItem();
+        if (item instanceof HealthBottle) {
+            ((HealthBottle) item).use(GameModel.getInstance().getPlayer());
+        }
+    }
+
+    /**
+     * Handles dropping items.
+     *
+     * @param e the key event containing the target item view
+     */
+    private void handleItemDrop(final KeyEvent e) {
+        if (!(e.getTarget() instanceof ItemView)) {
+            return;
+        }
+
+        AItem item = ((ItemView) e.getTarget()).getItem();
+        if (item != null) {
+            item.drop(GameModel.getInstance().getPlayer());
         }
     }
 

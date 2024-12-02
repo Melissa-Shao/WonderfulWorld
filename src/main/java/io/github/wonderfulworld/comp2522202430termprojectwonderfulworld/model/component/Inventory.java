@@ -92,14 +92,6 @@ public class Inventory {
         return capacity == items.size();
     }
 
-    /**
-     * Gets the current number of items in the inventory.
-     *
-     * @return the quantity of items currently in the inventory
-     */
-    public int getQuantity() {
-        return items.size();
-    }
 
     /**
      * Property for quantity, used for data binding.

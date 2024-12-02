@@ -78,7 +78,7 @@ public final class StateManager {
         currentController = STATES.get(GameState.GAME);
 
         // Reset all controls and views when restarting the game
-        STATES.forEach((key, value) -> value.reset());
+        STATES.forEach((_, value) -> value.reset());
         GameModel gameModel = GameModel.getInstance();
         gameModel.init(fromSave);
         currentController.init();

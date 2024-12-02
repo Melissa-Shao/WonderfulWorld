@@ -80,4 +80,14 @@ public final class Config {
     public static String getWindowName() {
         return jo.getString("windowName");
     }
+
+    /**
+     * Returns a string representation of this Config object.
+     *
+     * @return the representation of the Config as a string
+     */
+    @Override
+    public String toString() {
+        return "Config{}";
+    }
 }

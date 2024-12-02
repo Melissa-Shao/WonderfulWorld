@@ -82,7 +82,7 @@ public class Equipment {
     }
 
     /**
-     * Unequips the specified item from the character and returns it to the inventory.
+     * Un equips the specified item from the character and returns it to the inventory.
      * If the item is currently equipped, it is added back to the inventory
      * and the corresponding equipment slot (weapon or armor) is cleared.
      *

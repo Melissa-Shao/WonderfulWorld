@@ -46,6 +46,21 @@ public class GameModel {
         JSONObject playerConfig = PlayerConfig.getPlayerConfig(fromSave);
         locationManager = new LocationManager();
 
+        initializePlayer(playerConfig);
+        initializeEquipment(playerConfig);
+        initializeInventory(playerConfig);
+        initializePosition(playerConfig);
+
+        setLocation(playerConfig.getInt("locationId"));
+        System.out.println("Game world initialized.");
+    }
+
+    /**
+     * Initializes the player with basic attributes from config.
+     *
+     * @param playerConfig the player configuration
+     */
+    private void initializePlayer(final JSONObject playerConfig) {
         player = new Player(
                 playerConfig.getString("name"),
                 playerConfig.getDouble("health"),
@@ -53,9 +68,15 @@ public class GameModel {
                 playerConfig.getDouble("armor"),
                 playerConfig.getDouble("damageRadius")
         );
-
         player.getHP().setInitialHealth(playerConfig.getDouble("initialHealth"));
+    }
 
+    /**
+     * Initializes player equipment from config.
+     *
+     * @param playerConfig the player configuration
+     */
+    private void initializeEquipment(final JSONObject playerConfig) {
         int equippedWeaponId = playerConfig.getInt("equippedWeaponId");
         if (equippedWeaponId != -1) {
             AItem item = ItemFactory.getItem(equippedWeaponId);
@@ -71,18 +92,29 @@ public class GameModel {
                 player.setEquipment((AEquipment) item);
             }
         }
+    }
 
+    /**
+     * Initializes player inventory from config.
+     *
+     * @param playerConfig the player configuration
+     */
+    private void initializeInventory(final JSONObject playerConfig) {
         for (Object item : playerConfig.getJSONArray("inventory")) {
             player.getInventory().addItem(ItemFactory.getItem((int) item));
         }
+    }
 
+    /**
+     * Initializes player position from config.
+     *
+     * @param playerConfig the player configuration
+     */
+    private void initializePosition(final JSONObject playerConfig) {
         player.setPosition(
                 TileMap.convertTileToPixel(playerConfig.getInt("positionX")),
                 TileMap.convertTileToPixel(playerConfig.getInt("positionY"))
         );
-
-        setLocation(playerConfig.getInt("locationId"));
-        System.out.println("Game world initialized.");
     }
 
     /**

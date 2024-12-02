@@ -107,7 +107,7 @@ public class GameOverView extends AView {
     }
 
     /**
-     * Renders the game over view.
+     * Renders the game-over view.
      */
     @Override
     public void render() {

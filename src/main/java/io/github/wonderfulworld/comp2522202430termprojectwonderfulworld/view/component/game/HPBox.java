@@ -35,9 +35,10 @@ public class HPBox {
     public HPBox(final DoubleProperty healthProperty) {
         this.health = new Text(INITIAL_X_POSITION, INITIAL_Y_POSITION,
                 "HP: " + healthProperty.get());
-        this.health.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;");
+        this.health.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;"
+                + "-fx-font-family: 'Comic Sans MS';");
         this.health.setFill(Color.WHITE);
-        healthProperty.addListener((observable, oldValue, newValue) ->
+        healthProperty.addListener((_, _, newValue) ->
             this.health.setText("HP: " + newValue.intValue()));
     }
 

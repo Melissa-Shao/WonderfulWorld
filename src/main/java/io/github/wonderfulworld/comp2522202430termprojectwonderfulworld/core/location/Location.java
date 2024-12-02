@@ -104,34 +104,59 @@ public class Location {
         spriteManager = new SpriteManager();
         tileMap = TileMapManager.createTileMap("config/location/" + locationId
                 + "/map.txt", TILE_SIZE);
+
+        initializeMonsters();
+        initializeItems();
+        initializePortals();
+
+        wasInitialized = true;
+        System.out.println("Location \"" + name + "\" was initialized.");
+    }
+
+    /**
+     * Initializes monsters from config and adds them to the sprite manager.
+     */
+    private void initializeMonsters() {
         for (Object monsterConfig : config.getJSONArray("monsters")) {
-            Monster monster = MonsterFactory.getMonster(((JSONObject) monsterConfig).getInt("id"));
+            JSONObject monsterJson = (JSONObject) monsterConfig;
+            Monster monster = MonsterFactory.getMonster(monsterJson.getInt("id"));
             monster.setPosition(
-                    TileMap.convertTileToPixel(((JSONObject) monsterConfig).getInt("positionX")),
-                    TileMap.convertTileToPixel(((JSONObject) monsterConfig).getInt("positionY")));
+                    TileMap.convertTileToPixel(monsterJson.getInt("positionX")),
+                    TileMap.convertTileToPixel(monsterJson.getInt("positionY")));
             monsters.add(monster);
             spriteManager.addSprite(monster);
         }
+    }
+
+    /**
+     * Initializes items from config and adds them to the sprite manager.
+     */
+    private void initializeItems() {
         for (Object itemConfig : config.getJSONArray("items")) {
-            AItem item = ItemFactory.getItem(((JSONObject) itemConfig).getInt("id"));
+            JSONObject itemJson = (JSONObject) itemConfig;
+            AItem item = ItemFactory.getItem(itemJson.getInt("id"));
             assert item != null;
             item.setPosition(
-                    TileMap.convertTileToPixel(((JSONObject) itemConfig).getInt("positionX")),
-                    TileMap.convertTileToPixel(((JSONObject) itemConfig).getInt("positionY")));
+                    TileMap.convertTileToPixel(itemJson.getInt("positionX")),
+                    TileMap.convertTileToPixel(itemJson.getInt("positionY")));
             items.add(item);
             spriteManager.addSprite(item);
         }
+    }
 
+    /**
+     * Initializes portals from config and adds them to the sprite manager.
+     */
+    private void initializePortals() {
         for (Object portalConfig : config.getJSONArray("portals")) {
-            Portal portal = PortalFactory.getPortal(((JSONObject) portalConfig).getInt("id"));
+            JSONObject portalJson = (JSONObject) portalConfig;
+            Portal portal = PortalFactory.getPortal(portalJson.getInt("id"));
             portal.setPosition(
-                    TileMap.convertTileToPixel(((JSONObject) portalConfig).getInt("positionX")),
-                    TileMap.convertTileToPixel(((JSONObject) portalConfig).getInt("positionY")));
+                    TileMap.convertTileToPixel(portalJson.getInt("positionX")),
+                    TileMap.convertTileToPixel(portalJson.getInt("positionY")));
             portals.add(portal);
             spriteManager.addSprite(portal);
         }
-        wasInitialized = true;
-        System.out.println("Location \"" + name + "\" was initialized.");
     }
 
     /**

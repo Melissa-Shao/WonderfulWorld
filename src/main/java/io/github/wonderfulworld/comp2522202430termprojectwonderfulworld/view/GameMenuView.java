@@ -169,8 +169,17 @@ public class GameMenuView extends AView {
         return heart;
     }
 
-
     @Override
     public void render() {
+    }
+
+    /**
+     * Returns a string representation of this GameMenuView.
+     *
+     * @return the representation of the GameMenuView as a string
+     */
+    @Override
+    public String toString() {
+        return "GameMenuView{}";
     }
 }

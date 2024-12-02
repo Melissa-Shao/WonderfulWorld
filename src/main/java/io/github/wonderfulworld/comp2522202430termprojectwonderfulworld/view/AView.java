@@ -49,6 +49,7 @@ public abstract class AView {
      * @param buttons the list of buttons to configure
      * @param vBox the VBox to add the buttons to
      */
+    @SuppressWarnings("unused")  // Used by child classes
     protected void configureAndAddButtonsToVBox(final List<Button> buttons, final VBox vBox) {
         for (Button button : buttons) {
             button.setPrefHeight(BUTTON_HEIGHT);

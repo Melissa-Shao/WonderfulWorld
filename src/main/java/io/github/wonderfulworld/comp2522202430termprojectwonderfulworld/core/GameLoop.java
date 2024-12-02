@@ -24,12 +24,15 @@ class GameLoop extends AnimationTimer {
     @Override
     public void handle(final long now) {
         double delta = (now - lastNanoTime) / NANOSECONDS_TO_SECONDS;
+        lastNanoTime = now;
 
-        // Frame rate cap
-        if (delta > 1 / MAX_DELTA_TIME) {
-            lastNanoTime = now;
-            StateManager.getCurrentState().tick(delta);
+        // Cap the maximum delta time
+        if (delta > MAX_DELTA_TIME) {
+            delta = MAX_DELTA_TIME;
         }
+
+        // Always run tick with the capped delta
+        StateManager.getCurrentState().tick(delta);
     }
 
     /**

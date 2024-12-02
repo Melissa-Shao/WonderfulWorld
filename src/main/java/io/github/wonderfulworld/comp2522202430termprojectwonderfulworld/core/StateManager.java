@@ -74,6 +74,7 @@ public final class StateManager {
      * @param fromSave whether to start the game from the save
      */
     public static void startGame(final boolean fromSave) {
+        System.out.println("Starting game...");
         currentController = STATES.get(GameState.GAME);
 
         // Reset all controls and views when restarting the game
@@ -81,6 +82,17 @@ public final class StateManager {
         GameModel gameModel = GameModel.getInstance();
         gameModel.init(fromSave);
         currentController.init();
+
+        // Set the scene
+        stage.setScene(currentController.getView().getScene());
+
+        // Start the game loop if it's not already running
+        if (gameLoop != null) {
+            gameLoop.start();
+        } else {
+            System.err.println("GameLoop is null!");
+        }
+
         System.out.println("Game starts.");
     }
 
@@ -98,6 +110,9 @@ public final class StateManager {
      * Goes to main menu.
      */
     public static void goToMainMenu() {
+        if (gameLoop != null) {
+            gameLoop.stop();
+        }
         currentController = STATES.get(GameState.MENU);
         currentController.init();
         stage.setScene(currentController.getView().getScene());

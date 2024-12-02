@@ -257,21 +257,24 @@ public class InventoryView extends AView {
     private void renderEquippedItems() {
         equippedItems.getChildren().clear();
 
+        // Create new ItemView instances
         ItemView weaponView = new ItemView(this);
-        equippedItems.getChildren().add(weaponView);
+        ItemView armorView = new ItemView(this);
 
+        // Set items if they exist
         AItem currentWeapon = player.getCurrentWeapon();
         if (currentWeapon != null) {
             weaponView.setItem(currentWeapon);
         }
 
-        ItemView armorView = new ItemView(this);
-        equippedItems.getChildren().add(armorView);
-
         AItem currentArmor = player.getCurrentArmor();
         if (currentArmor != null) {
             armorView.setItem(currentArmor);
         }
+
+        // Add views individually
+        equippedItems.getChildren().add(weaponView);
+        equippedItems.getChildren().add(armorView);
     }
 
     /**
@@ -279,16 +282,24 @@ public class InventoryView extends AView {
      * Clears the inventory container and populates it with all available items.
      */
     private void renderItems() {
+        // Clear existing items first
         items.getChildren().clear();
 
+        // Create a new list of item views
         for (int i = 0; i < inventory.getCapacity(); i++) {
-            items.getChildren().add(new ItemView(this));
-        }
+            // Create a new ItemView instance for each slot
+            ItemView newItemView = new ItemView(this);
 
-        int count = 0;
-        for (AItem item : inventory.getItems()) {
-            ((ItemView) items.getChildren().get(count)).setItem(item);
-            count++;
+            // If there's an item for this slot, set it
+            if (i < inventory.getItems().size()) {
+                AItem item = inventory.getItems().get(i);
+                newItemView.setItem(item);
+            }
+
+            // Only add if it's not already in the FlowPane
+            if (!items.getChildren().contains(newItemView)) {
+                items.getChildren().add(newItemView);
+            }
         }
     }
 

@@ -50,10 +50,9 @@ public class InventoryController extends AController implements IController {
         Inventory inventory = player.getInventory();
         String code = e.getCode().toString();
 
-        // Extend default behavior with additional key handling
         switch (code) {
             case "ESCAPE" -> StateManager.goToMainMenu();
-            case "I" -> StateManager.goToInventory();
+            case "I" -> StateManager.continueGame();
             case "J" -> {
                 if (e.getTarget() instanceof ItemView) {
                     AItem item = ((ItemView) e.getTarget()).getItem();
@@ -82,7 +81,9 @@ public class InventoryController extends AController implements IController {
                     }
                 }
             }
-            default -> throw new IllegalStateException("Unexpected value: " + code);
+            default -> {
+                // Do nothing for unhandled keys
+            }
         }
     }
 

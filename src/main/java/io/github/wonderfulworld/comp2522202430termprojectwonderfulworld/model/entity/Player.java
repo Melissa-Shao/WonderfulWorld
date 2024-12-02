@@ -46,6 +46,13 @@ public class Player extends ASprite implements IDamageable {
     private static final double LEG_HEIGHT = 16.0;
 
     /**
+     * The Speed.
+     * -- GETTER --
+     * Gets the speed.
+     */
+    @Getter private final double speed = 160;
+
+    /**
      * The Images.
      * <p>
      * The images of the character in different directions.

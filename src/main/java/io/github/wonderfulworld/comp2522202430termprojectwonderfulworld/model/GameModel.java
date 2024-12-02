@@ -58,12 +58,18 @@ public class GameModel {
 
         int equippedWeaponId = playerConfig.getInt("equippedWeaponId");
         if (equippedWeaponId != -1) {
-            player.setEquipment((AEquipment) ItemFactory.getItem(equippedWeaponId));
+            AItem item = ItemFactory.getItem(equippedWeaponId);
+            if (item instanceof AEquipment) {
+                player.setEquipment((AEquipment) item);
+            }
         }
 
         int equippedArmorId = playerConfig.getInt("equippedArmorId");
         if (equippedArmorId != -1) {
-            player.setEquipment((AEquipment) ItemFactory.getItem(equippedArmorId));
+            AItem item = ItemFactory.getItem(equippedArmorId);
+            if (item instanceof AEquipment) {
+                player.setEquipment((AEquipment) item);
+            }
         }
 
         for (Object item : playerConfig.getJSONArray("inventory")) {

@@ -24,16 +24,33 @@ public class GameOverView extends AView {
     // Constants for layout and styling
     private static final double BUTTON_PREF_WIDTH = 200;
     private static final double BUTTON_PREF_HEIGHT = 56;
-    private static final double TITLE_FONT_SIZE = 64;
+    private static final double TITLE_FONT_SIZE = 22;
     private static final double VBOX_SPACING = 32;
     private static final String BACKGROUND_STYLE = "-fx-background-color: #FFB6C1;";
-    private static final String BUTTON_STYLE = "-fx-background-color: #FFD700;"
-            + " -fx-text-fill: #FFFFFF;"
-            + " -fx-font-size: 16px;"
-            + " -fx-font-weight: bold;"
-            + " -fx-border-radius: 10px;"
-            + " -fx-background-radius: 10px;"
-            + " -fx-cursor: hand;";
+    private static final String BUTTON_STYLE = """
+            -fx-background-color: linear-gradient(to bottom, #FFB6C1, #FF69B4);
+            -fx-background-radius: 20;
+            -fx-border-color: #FFD700;
+            -fx-border-width: 2;
+            -fx-border-radius: 20;
+            -fx-text-fill: #FFFFFF;
+            -fx-font-size: 18px;
+            -fx-font-family: 'Comic Sans MS';
+            -fx-font-weight: bold;
+            -fx-cursor: hand;
+            """;
+    private static final String BUTTON_HOVER_STYLE = """
+            -fx-background-color: linear-gradient(to bottom, #FF69B4, #FF1493);
+            -fx-background-radius: 20;
+            -fx-border-color: #FFD700;
+            -fx-border-width: 3;
+            -fx-border-radius: 20;
+            -fx-text-fill: #FFFFFF;
+            -fx-font-size: 18px;
+            -fx-font-family: 'Comic Sans MS';
+            -fx-font-weight: bold;
+            -fx-cursor: hand;
+            """;
 
     /**
      * Constructs a new GameOverView with the specified controller.
@@ -74,6 +91,8 @@ public class GameOverView extends AView {
         mainMenu.setPrefHeight(BUTTON_PREF_HEIGHT);
         mainMenu.setPrefWidth(BUTTON_PREF_WIDTH);
         mainMenu.setStyle(BUTTON_STYLE);
+        mainMenu.setOnMouseEntered(_ -> mainMenu.setStyle(BUTTON_HOVER_STYLE));
+        mainMenu.setOnMouseExited(_ -> mainMenu.setStyle(BUTTON_STYLE));
 
         // Add components to VBox
         vBox.getChildren().add(title);

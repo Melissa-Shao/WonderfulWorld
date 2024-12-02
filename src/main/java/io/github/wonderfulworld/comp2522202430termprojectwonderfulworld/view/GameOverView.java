@@ -17,7 +17,7 @@ import javafx.scene.text.Text;
  * of the game's menu. It includes buttons for various menu options such as
  * "Continue Game", "Save Game", "To Main Menu", and "Exit Game".
  *
- * @author Melissa Shao
+ * @author Melissa Shao, Candice Wei
  * @version 2024
  */
 public class GameOverView extends AView {
@@ -26,12 +26,14 @@ public class GameOverView extends AView {
     private static final double BUTTON_PREF_HEIGHT = 56;
     private static final double TITLE_FONT_SIZE = 64;
     private static final double VBOX_SPACING = 32;
-    private static final String BACKGROUND_STYLE = "-fx-background-color: #232933;";
-    private static final String BUTTON_STYLE = "-fx-background-color: #2b3542; " // Button style
-            + "-fx-text-fill: white; "
-            + "-fx-font-size: 16px; "
-            + "-fx-font-weight: bold; "
-            + "-fx-cursor: hand;";
+    private static final String BACKGROUND_STYLE = "-fx-background-color: #FFB6C1;";
+    private static final String BUTTON_STYLE = "-fx-background-color: #FFD700;"
+            + " -fx-text-fill: #FFFFFF;"
+            + " -fx-font-size: 16px;"
+            + " -fx-font-weight: bold;"
+            + " -fx-border-radius: 10px;"
+            + " -fx-background-radius: 10px;"
+            + " -fx-cursor: hand;";
 
     /**
      * Constructs a new GameOverView with the specified controller.
@@ -57,14 +59,14 @@ public class GameOverView extends AView {
 
         // Title text
         Text title = new Text("GAME OVER");
-        title.setFont(Font.font("Arial", FontWeight.BOLD, TITLE_FONT_SIZE));
+        title.setFont(Font.font("Comic Sans MS", FontWeight.BOLD, TITLE_FONT_SIZE));
         title.setFill(Color.WHITE);
 
         // Description text
         Text description = new Text("\n"
                 + "Your path was very long and difficult,"
                 + " unfortunately, you fell from the hands of darkness.");
-        description.setFont(Font.font("Arial", FontWeight.BOLD, VBOX_SPACING));
+        description.setFont(Font.font("Comic Sans MS", FontWeight.BOLD, TITLE_FONT_SIZE));
         description.setFill(Color.WHITE);
 
         // Main Menu button

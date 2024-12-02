@@ -8,7 +8,6 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.effect.DropShadow;
-import java.util.ArrayList;
 
 /**
  * Represents the game menu view in the application.
@@ -79,55 +78,63 @@ public class GameMenuView extends AView {
      */
     @Override
     public void init() {
-        VBox vBox = new VBox();
-        ArrayList<Button> buttons = new ArrayList<>();
+        VBox vBox = createVBox();
 
-        String backgroundStyle = """
-                -fx-background-color: linear-gradient(to bottom, #FFE4E1, #FFC0CB);
-                -fx-background-repeat: repeat;
-                """;
+        DropShadow shadow = createDropShadow();
 
-        vBox.setStyle(backgroundStyle);
-        vBox.setAlignment(Pos.CENTER);
-        vBox.setSpacing(VBOX_SPACING);
-        vBox.setPadding(new javafx.geometry.Insets(VBOX_PADDING));
-
+        // Create individual buttons
         Button continueGame = createPrincessButton("Continue Game");
         Button saveGame = createPrincessButton("Save Progress");
         Button toMainMenu = createPrincessButton("Return to Main Menu");
         Button exitGame = createPrincessButton("Exit");
 
-        buttons.add(continueGame);
-        buttons.add(saveGame);
-        buttons.add(toMainMenu);
-        buttons.add(exitGame);
+        // Configure buttons
+        configureButton(continueGame, shadow, vBox);
+        configureButton(saveGame, shadow, vBox);
+        configureButton(toMainMenu, shadow, vBox);
+        configureButton(exitGame, shadow, vBox);
 
+        // Create scene
+        scene = new Scene(vBox, Config.getWindowWidth(), Config.getWindowHeight());
+        scene.setOnKeyPressed(((GameMenuController) controller)::keyPress);
+
+        // Attach actions
+        continueGame.setOnMouseClicked(((GameMenuController) controller)::gameContinueButton);
+        saveGame.setOnMouseClicked(((GameMenuController) controller)::gameSaveButton);
+        toMainMenu.setOnMouseClicked(((GameMenuController) controller)::mainMenuButton);
+        exitGame.setOnMouseClicked(((GameMenuController) controller)::exitGameButton);
+    }
+
+    private VBox createVBox() {
+        VBox vBox = new VBox();
+        String backgroundStyle = """
+            -fx-background-color: linear-gradient(to bottom, #FFE4E1, #FFC0CB);
+            -fx-background-repeat: repeat;
+            """;
+        vBox.setStyle(backgroundStyle);
+        vBox.setAlignment(Pos.CENTER);
+        vBox.setSpacing(VBOX_SPACING);
+        vBox.setPadding(new javafx.geometry.Insets(VBOX_PADDING));
+        return vBox;
+    }
+
+    private DropShadow createDropShadow() {
         DropShadow shadow = new DropShadow();
         shadow.setColor(Color.rgb(0, 0, 0, SHADOW_OPACITY));
         shadow.setOffsetX(SHADOW_OFFSET_X);
         shadow.setOffsetY(SHADOW_OFFSET_Y);
-
-        for (Button button : buttons) {
-            button.setPrefHeight(BUTTON_PREF_HEIGHT);
-            button.setPrefWidth(BUTTON_PREF_WIDTH);
-            button.setEffect(shadow);
-
-            button.setOnMouseEntered(_ -> button.setStyle(BUTTON_HOVER_STYLE));
-            button.setOnMouseExited(_ -> button.setStyle(BUTTON_STYLE));
-
-            vBox.getChildren().add(button);
-        }
-
-        scene = new Scene(vBox, Config.getWindowWidth(), Config.getWindowHeight());
-
-        scene.setOnKeyPressed(((GameMenuController) controller)::keyPress);
-        continueGame.setOnMouseClicked(((GameMenuController) controller)
-                ::gameContinueButton);
-        saveGame.setOnMouseClicked(((GameMenuController) controller)::gameSaveButton);
-        toMainMenu.setOnMouseClicked(((GameMenuController) controller)
-                ::mainMenuButton);
-        exitGame.setOnMouseClicked(((GameMenuController) controller)::exitGameButton);
+        return shadow;
     }
+
+    private void configureButton(final Button button, final DropShadow shadow, final VBox vBox) {
+        button.setPrefHeight(BUTTON_PREF_HEIGHT);
+        button.setPrefWidth(BUTTON_PREF_WIDTH);
+        button.setEffect(shadow);
+        button.setOnMouseEntered(_ -> button.setStyle(BUTTON_HOVER_STYLE));
+        button.setOnMouseExited(_ -> button.setStyle(BUTTON_STYLE));
+        vBox.getChildren().add(button);
+    }
+
 
     private Button createPrincessButton(final String text) {
         Button button = new Button(text);

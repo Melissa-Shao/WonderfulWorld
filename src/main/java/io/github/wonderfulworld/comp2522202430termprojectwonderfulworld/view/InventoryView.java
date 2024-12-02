@@ -30,29 +30,31 @@ import java.util.Objects;
  * of the inventory screen, including item display, equipped items,
  * and hints for user interaction.
  *
- * @author Melissa
+ * @author Melissa Shao, Candice Wei
  * @version 2024
  */
 public class InventoryView extends AView {
     // Constants for layout dimensions and text sizes
-    private static final int GRID_PANE_H_GAP = 32; // Horizontal gap for GridPane
-    private static final int GRID_PANE_V_GAP = 48; // Vertical gap for GridPane
-    private static final int ITEM_INFO_VIEW_SPACING = 24; // Spacing in the Item Info View
-    private static final int ITEM_INFO_TITLE_SIZE = 20; // Font size for item info title
-    private static final int ITEMS_SPACING = 24; // Spacing between items
-    private static final int ITEMS_PREF_WIDTH = 64; // Preferred width for item slots
-    private static final int ITEMS_PREF_HEIGHT = 64; // Preferred height for item slots
-    private static final int INVENTORY_TITLE_SIZE = 20; // Font size for inventory title
-    private static final int CAPACITY_FONT_SIZE = 16; // Font size for capacity text
-    private static final int HINTS_SPACING = 32; // Spacing in the hints box
-    private static final int HINT_TEXT_SIZE = 20; // Font size for hint texts
-    private static final int ITEM_INFO_SPACING = 8; // Spacing in item info box
-    private static final int ITEM_INFO_LABEL_SIZE = 16; // Font size for item labels and details
-    private static final String BACKGROUND_STYLE = "-fx-background-color: #1B2029;"
-            + " -fx-padding: 32px; -fx-border-radius: 8px; -fx-background-radius: 8px;"
-            + " -fx-border-width: 2px; -fx-border-style: solid; -fx-border-color: #13171E;";
-    private static final String GRID_PANE_STYLE = "-fx-background-color: #232933;"
+    private static final int GRID_PANE_H_GAP = 32;
+    private static final int GRID_PANE_V_GAP = 48;
+    private static final int ITEM_INFO_VIEW_SPACING = 24;
+    private static final int ITEM_INFO_TITLE_SIZE = 20;
+    private static final int ITEMS_SPACING = 24;
+    private static final int INVENTORY_TITLE_SIZE = 20;
+    private static final int CAPACITY_FONT_SIZE = 16;
+    private static final int HINTS_SPACING = 32;
+    private static final int HINT_TEXT_SIZE = 20;
+    private static final int ITEM_INFO_SPACING = 8;
+    private static final String BACKGROUND_STYLE = "-fx-background-color: "
+            + "linear-gradient(to bottom, "
+            + "#FFE4E1, #FFC0CB);"
             + " -fx-padding: 48px 96px;";
+    private static final String ITEM_BOX_STYLE = "-fx-background-color: #FFB6C1;"
+            + " -fx-padding: 32px;"
+            + " -fx-border-radius: 20px; -fx-background-radius: 20px;"
+            + " -fx-border-width: 3px; -fx-border-style: solid;"
+            + " -fx-border-color: #FFD700;";
+
 
     private Pane itemInfoContainer;
     private FlowPane items;
@@ -79,8 +81,6 @@ public class InventoryView extends AView {
         FlowPane flowPane = new FlowPane();
         flowPane.setHgap(ITEMS_SPACING);
         flowPane.setVgap(ITEMS_SPACING);
-        flowPane.setPrefWidth(ITEMS_PREF_WIDTH);
-        flowPane.setPrefHeight(ITEMS_PREF_HEIGHT);
         return flowPane;
     }
 
@@ -94,7 +94,7 @@ public class InventoryView extends AView {
         GridPane gridPane = new GridPane();
         gridPane.setHgap(GRID_PANE_H_GAP);
         gridPane.setVgap(GRID_PANE_V_GAP);
-        gridPane.setStyle(GRID_PANE_STYLE);
+        gridPane.setStyle(BACKGROUND_STYLE);
         return gridPane;
     }
 
@@ -106,11 +106,11 @@ public class InventoryView extends AView {
      */
     private VBox createItemInfoBox() {
         VBox itemInfoView = new VBox();
-        itemInfoView.setStyle(BACKGROUND_STYLE);
+        itemInfoView.setStyle(ITEM_BOX_STYLE);
         itemInfoView.setSpacing(ITEM_INFO_VIEW_SPACING);
 
-        Text itemInfoTitle = new Text("Item characteristics");
-        itemInfoTitle.setFont(Font.font("Arial", FontWeight.BOLD, ITEM_INFO_TITLE_SIZE));
+        Text itemInfoTitle = new Text("Item Characteristics");
+        itemInfoTitle.setFont(Font.font("Comic Sans MS", FontWeight.BOLD, ITEM_INFO_TITLE_SIZE));
         itemInfoTitle.setFill(Color.WHITE);
 
         itemInfoContainer = new Pane();
@@ -127,11 +127,11 @@ public class InventoryView extends AView {
      */
     private VBox createItemsBox() {
         VBox itemsView = new VBox();
-        itemsView.setStyle(BACKGROUND_STYLE);
+        itemsView.setStyle(ITEM_BOX_STYLE);
         itemsView.setSpacing(ITEMS_SPACING);
 
         Text inventoryTitle = new Text("Inventory");
-        inventoryTitle.setFont(Font.font("Arial", FontWeight.BOLD, INVENTORY_TITLE_SIZE));
+        inventoryTitle.setFont(Font.font("Comic Sans MS", FontWeight.BOLD, INVENTORY_TITLE_SIZE));
         inventoryTitle.setFill(Color.WHITE);
 
         Text capacity = new Text();
@@ -139,13 +139,13 @@ public class InventoryView extends AView {
                 inventory.quantityProperty().asString("Capacity %d / ")
                         .concat(inventory.capacityProperty().asString("%d"))
         );
-        capacity.setFont(Font.font("Arial", FontWeight.BOLD, CAPACITY_FONT_SIZE));
+        capacity.setFont(Font.font("Comic Sans MS", FontWeight.BOLD, CAPACITY_FONT_SIZE));
         capacity.setFill(Color.WHITE);
 
         items = createDefaultFlowPane();
 
         Text equippedItemsTitle = new Text("Equipped Items");
-        equippedItemsTitle.setFont(Font.font("Arial", FontWeight.BOLD, CAPACITY_FONT_SIZE));
+        capacity.setFont(Font.font("Comic Sans MS", FontWeight.BOLD, CAPACITY_FONT_SIZE));
         equippedItemsTitle.setFill(Color.WHITE);
 
         equippedItems = createDefaultFlowPane();
@@ -166,19 +166,27 @@ public class InventoryView extends AView {
      */
     private HBox createHintsBox() {
         HBox hintsView = new HBox();
-        hintsView.setStyle(BACKGROUND_STYLE);
+        hintsView.setStyle("""
+            -fx-background-color: #FFB6C1;
+            -fx-padding: 32px;
+            -fx-border-radius: 20px;
+            -fx-background-radius: 20px;
+            -fx-border-width: 3px;
+            -fx-border-style: solid;
+            -fx-border-color: #FFD700;
+            """);
         hintsView.setSpacing(HINTS_SPACING);
 
         Text hintText = new Text("J: Equip/UnEquip");
-        hintText.setFont(Font.font("Arial", FontWeight.BOLD, HINT_TEXT_SIZE));
+        hintText.setFont(Font.font("Comic Sans MS", FontWeight.BOLD, HINT_TEXT_SIZE));
         hintText.setFill(Color.WHITE);
 
         Text hintTextUse = new Text("K: Use");
-        hintTextUse.setFont(Font.font("Arial", FontWeight.BOLD, HINT_TEXT_SIZE));
+        hintTextUse.setFont(Font.font("Comic Sans MS", FontWeight.BOLD, HINT_TEXT_SIZE));
         hintTextUse.setFill(Color.WHITE);
 
         Text hintTextRemove = new Text("L: Remove");
-        hintTextRemove.setFont(Font.font("Arial", FontWeight.BOLD, HINT_TEXT_SIZE));
+        hintTextRemove.setFont(Font.font("Comic Sans MS", FontWeight.BOLD, HINT_TEXT_SIZE));
         hintTextRemove.setFill(Color.WHITE);
 
         hintsView.getChildren().addAll(hintText, hintTextUse, hintTextRemove);
@@ -190,10 +198,10 @@ public class InventoryView extends AView {
      * Listeners handle updates to inventory quantity and equipped items.
      */
     private void attachListeners() {
-        inventory.quantityProperty().addListener((observable, oldValue, newValue) -> renderItems());
-        player.getEquipment().weaponProperty().addListener((observable, oldWeapon, newWeapon)
+        inventory.quantityProperty().addListener((_, _, _) -> renderItems());
+        player.getEquipment().weaponProperty().addListener((_, _, _)
                 -> renderEquippedItems());
-        player.getEquipment().armorProperty().addListener((observable, oldArmor, newArmor)
+        player.getEquipment().armorProperty().addListener((_, _, _)
                 -> renderEquippedItems());
     }
 
@@ -292,11 +300,11 @@ public class InventoryView extends AView {
      */
     private void addItemName(final VBox itemInfo, final AItem item) {
         Text nameTitle = new Text("Name:");
-        nameTitle.setFont(Font.font("Arial", FontWeight.BOLD, ITEM_INFO_LABEL_SIZE));
+        nameTitle.setFont(Font.font("Comic Sans MS", FontWeight.BOLD, HINT_TEXT_SIZE));
         nameTitle.setFill(Color.WHITE);
 
         Text name = new Text(item.getName());
-        name.setFont(Font.font("Arial", FontWeight.NORMAL, ITEM_INFO_LABEL_SIZE));
+        name.setFont(Font.font("Comic Sans MS", FontWeight.BOLD, HINT_TEXT_SIZE));
         name.setFill(Color.WHITE);
 
         itemInfo.getChildren().add(nameTitle);
@@ -312,19 +320,19 @@ public class InventoryView extends AView {
      */
     private void addWeaponInfo(final VBox itemInfo, final Weapon weapon) {
         Text damageTitle = new Text("Damage:");
-        damageTitle.setFont(Font.font("Arial", FontWeight.BOLD, ITEM_INFO_LABEL_SIZE));
+        damageTitle.setFont(Font.font("Comic Sans MS", FontWeight.BOLD, HINT_TEXT_SIZE));
         damageTitle.setFill(Color.WHITE);
 
         Text damage = new Text(String.valueOf(weapon.getDamage()));
-        damage.setFont(Font.font("Arial", FontWeight.NORMAL, ITEM_INFO_LABEL_SIZE));
+        damage.setFont(Font.font("Comic Sans MS", FontWeight.BOLD, HINT_TEXT_SIZE));
         damage.setFill(Color.WHITE);
 
         Text damageRadiusTitle = new Text("Damage Radius:");
-        damageRadiusTitle.setFont(Font.font("Arial", FontWeight.BOLD, ITEM_INFO_LABEL_SIZE));
+        damageRadiusTitle.setFont(Font.font("Comic Sans MS", FontWeight.BOLD, HINT_TEXT_SIZE));
         damageRadiusTitle.setFill(Color.WHITE);
 
         Text damageRadius = new Text(String.valueOf(weapon.getRadius()));
-        damageRadius.setFont(Font.font("Arial", FontWeight.NORMAL, ITEM_INFO_LABEL_SIZE));
+        damageRadius.setFont(Font.font("Comic Sans MS", FontWeight.BOLD, HINT_TEXT_SIZE));
         damageRadius.setFill(Color.WHITE);
 
         itemInfo.getChildren().add(damageTitle);
@@ -342,11 +350,11 @@ public class InventoryView extends AView {
      */
     private void addArmorInfo(final VBox itemInfo, final Armor armor) {
         Text armorTitle = new Text("Armor:");
-        armorTitle.setFont(Font.font("Arial", FontWeight.BOLD, ITEM_INFO_LABEL_SIZE));
+        armorTitle.setFont(Font.font("Comic Sans MS", FontWeight.BOLD, HINT_TEXT_SIZE));
         armorTitle.setFill(Color.WHITE);
 
         Text armorProperty = new Text(String.valueOf(armor.getArmor()));
-        armorProperty.setFont(Font.font("Arial", FontWeight.NORMAL, ITEM_INFO_LABEL_SIZE));
+        armorProperty.setFont(Font.font("Comic Sans MS", FontWeight.BOLD, HINT_TEXT_SIZE));
         armorProperty.setFill(Color.WHITE);
 
         itemInfo.getChildren().add(armorTitle);
@@ -362,11 +370,11 @@ public class InventoryView extends AView {
      */
     private void addHealthBottleInfo(final VBox itemInfo, final HealthBottle bottle) {
         Text bottleTitle = new Text("Health:");
-        bottleTitle.setFont(Font.font("Arial", FontWeight.BOLD, ITEM_INFO_LABEL_SIZE));
+        bottleTitle.setFont(Font.font("Comic Sans MS", FontWeight.BOLD, HINT_TEXT_SIZE));
         bottleTitle.setFill(Color.WHITE);
 
         Text health = new Text("+" + bottle.getHealth());
-        health.setFont(Font.font("Arial", FontWeight.NORMAL, ITEM_INFO_LABEL_SIZE));
+        health.setFont(Font.font("Comic Sans MS", FontWeight.BOLD, HINT_TEXT_SIZE));
         health.setFill(Color.WHITE);
 
         itemInfo.getChildren().add(bottleTitle);

@@ -10,17 +10,17 @@
   ],
   "items": [
     {
-      "id": 1,
+      "id": 2,
       "positionX": 6,
       "positionY": 9
     },
     {
-      "id": 3,
+      "id": 4,
       "positionX": 25,
       "positionY": 13
     },
     {
-      "id": 5,
+      "id": 6,
       "positionX": 5,
       "positionY": 13
     }
@@ -28,7 +28,7 @@
   "monsters": [
     {
       "id": 1,
-      "positionX": 24,
+      "positionX": 18,
       "positionY": 6
     },
     {

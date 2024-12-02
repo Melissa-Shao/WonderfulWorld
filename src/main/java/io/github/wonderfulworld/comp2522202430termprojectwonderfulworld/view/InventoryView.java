@@ -41,7 +41,6 @@ public class InventoryView extends AView {
     private static final int ITEM_INFO_TITLE_SIZE = 20;
     private static final int ITEMS_SPACING = 24;
     private static final int INVENTORY_TITLE_SIZE = 20;
-    private static final int CAPACITY_FONT_SIZE = 16;
     private static final int HINTS_SPACING = 32;
     private static final int HINT_TEXT_SIZE = 20;
     private static final int ITEM_INFO_SPACING = 8;
@@ -139,13 +138,14 @@ public class InventoryView extends AView {
                 inventory.quantityProperty().asString("Capacity %d / ")
                         .concat(inventory.capacityProperty().asString("%d"))
         );
-        capacity.setFont(Font.font("Comic Sans MS", FontWeight.BOLD, CAPACITY_FONT_SIZE));
+        capacity.setFont(Font.font("Comic Sans MS", FontWeight.BOLD, INVENTORY_TITLE_SIZE));
         capacity.setFill(Color.WHITE);
 
         items = createDefaultFlowPane();
 
         Text equippedItemsTitle = new Text("Equipped Items");
-        capacity.setFont(Font.font("Comic Sans MS", FontWeight.BOLD, CAPACITY_FONT_SIZE));
+        equippedItemsTitle.setFont(Font.font("Comic Sans MS",
+                FontWeight.BOLD, INVENTORY_TITLE_SIZE));
         equippedItemsTitle.setFill(Color.WHITE);
 
         equippedItems = createDefaultFlowPane();

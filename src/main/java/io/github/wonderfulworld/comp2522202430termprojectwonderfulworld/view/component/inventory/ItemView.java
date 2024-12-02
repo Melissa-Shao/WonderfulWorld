@@ -12,8 +12,7 @@ import java.util.Objects;
  * This class extends JavaFX Button to visually represent items
  * in the inventory system with customizable styles and focus behaviors.
  *
- *
- * @author Melissa Shao
+ * @author Melissa Shao, Candice Wei
  * @version 2024
  */
 public class ItemView extends Button {
@@ -22,6 +21,23 @@ public class ItemView extends Button {
      * The constant ITEM_SIZE represents the width and height of the ItemView.
      */
     private static final int ITEM_SIZE = 64;
+    private static final int TILE_SIZE = 16;
+
+    /**
+     * Style constants for better maintainability.
+     */
+    private static final String BASE_STYLE =
+            "-fx-background-radius: 8px;" + "-fx-border-radius: 8px;"
+                    + "-fx-border-width: 2px;" + "-fx-border-style: solid;"
+                    + "-fx-focus-color: transparent;" + "-fx-faint-focus-color: transparent;";
+
+    private static final String DEFAULT_BACKGROUND = "-fx-background-color:"
+            + " rgba(255, 255, 255, 0.3);";
+    private static final String DEFAULT_BORDER = "-fx-border-color: rgba(255, 255, 255, 0.5);";
+
+    private static final String FOCUSED_BACKGROUND = "-fx-background-color:"
+            + "rgba(255, 255, 255, 0.5);";
+    private static final String FOCUSED_BORDER = "-fx-border-color: #FFD700;";
 
     /**
      * The Item reference.
@@ -38,6 +54,11 @@ public class ItemView extends Button {
 
         setPrefWidth(ITEM_SIZE);
         setPrefHeight(ITEM_SIZE);
+        setMinWidth(ITEM_SIZE);
+        setMinHeight(ITEM_SIZE);
+        setMaxWidth(ITEM_SIZE);
+        setMaxHeight(ITEM_SIZE);
+
         setDefaultStyle();
 
         // Focus Events
@@ -56,16 +77,7 @@ public class ItemView extends Button {
      * This style is applied when the item view gains focus.
      */
     private void setFocusedStyle() {
-        setStyle(
-                "-fx-background-color: #232933;"
-                        + "-fx-border-radius: 2px;"
-                        + "-fx-background-radius: 2px;"
-                        + "-fx-border-width: 1px;"
-                        + "-fx-border-style: solid;"
-                        + "-fx-border-color: #20ADB6;"
-                        + "-fx-focus-color: transparent;"
-                        + "-fx-faint-focus-color: transparent;"
-        );
+        setStyle(BASE_STYLE + FOCUSED_BACKGROUND + FOCUSED_BORDER);
     }
 
     /**
@@ -73,16 +85,7 @@ public class ItemView extends Button {
      * This style is applied when the item view loses focus.
      */
     private void setDefaultStyle() {
-        setStyle(
-                "-fx-background-color: #232933;"
-                        + "-fx-border-radius: 2px;"
-                        + "-fx-background-radius: 2px;"
-                        + "-fx-border-width: 1px;"
-                        + "-fx-border-style: solid;"
-                        + "-fx-border-color: #13171E;"
-                        + "-fx-focus-color: transparent;"
-                        + "-fx-faint-focus-color: transparent;"
-        );
+        setStyle(BASE_STYLE + DEFAULT_BACKGROUND + DEFAULT_BORDER);
     }
 
     /**
@@ -93,7 +96,15 @@ public class ItemView extends Button {
      */
     public void setItem(final AItem item) {
         itemRef = item;
-        setGraphic(new ImageView(item.getImage()));
+        if (item != null) {
+            ImageView imageView = new ImageView(item.getImage());
+            imageView.setFitWidth(ITEM_SIZE - TILE_SIZE);
+            imageView.setFitHeight(ITEM_SIZE - TILE_SIZE);
+            imageView.setPreserveRatio(true);
+            setGraphic(imageView);
+        } else {
+            setGraphic(null);
+        }
     }
 
     /**
@@ -117,7 +128,6 @@ public class ItemView extends Button {
 
     /**
      * Compares this ItemView with another object for equality.
-     * Two HPBox are considered equal if they contain the same health.
      *
      * @param object the object to compare with this ItemView
      * @return true if the given object is equal to this ItemView, false otherwise

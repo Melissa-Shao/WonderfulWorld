@@ -7,7 +7,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-
+import javafx.scene.effect.DropShadow;
 import java.util.ArrayList;
 
 /**
@@ -17,22 +17,58 @@ import java.util.ArrayList;
  * "Continue Game", "Save Game", "To Main Menu", and "Exit Game".
  *
  *
- * @author Melissa Shao
+ * @author Melissa Shao, Candice Wei
  * @version 2024
  */
 public class GameMenuView extends AView {
-    // Constants for layout
-    private static final int BUTTON_SPACING = 16; // Spacing between buttons in VBox
+    // CONSTANTS
+    private static final int VBOX_SPACING = 20;
+    private static final int VBOX_PADDING = 30;
+    private static final int BUTTON_PREF_HEIGHT = 60;
+    private static final int BUTTON_PREF_WIDTH = 250;
+    private static final double SHADOW_OPACITY = 0.3;
+    private static final int SHADOW_OFFSET_X = 3;
+    private static final int SHADOW_OFFSET_Y = 3;
+    private static final double HEART_SCALE = 0.7;
+    private static final double HEART_CONTROL_X1 = 0;
+    private static final double HEART_CONTROL_Y1 = -4;
+    private static final double HEART_CONTROL_X2 = 4;
+    private static final double HEART_CONTROL_Y2 = -6;
+    private static final double HEART_FINAL_X = 16;
+    private static final double HEART_FINAL_Y = 0;
+    private static final double HEART_QUAD_CONTROL_X = 8;
+    private static final double HEART_QUAD_CONTROL_Y = 8;
 
-    /**
-     * The constant BACKGROUND_STYLE defines the CSS styling applied to the menu background.
-     */
-    private static final String BACKGROUND_STYLE = "-fx-background-color: #232933; ";
+    private static final String BUTTON_STYLE = """
+            -fx-background-color: linear-gradient(to bottom, #FFB6C1, #FF69B4);
+            -fx-background-radius: 20;
+            -fx-border-color: #FFD700;
+            -fx-border-width: 2;
+            -fx-border-radius: 20;
+            -fx-text-fill: #FFFFFF;
+            -fx-font-size: 18px;
+            -fx-font-family: 'Comic Sans MS';
+            -fx-font-weight: bold;
+            -fx-cursor: hand;
+            """;
+
+    private static final String BUTTON_HOVER_STYLE = """
+            -fx-background-color: linear-gradient(to bottom, #FF69B4, #FF1493);
+            -fx-background-radius: 20;
+            -fx-border-color: #FFD700;
+            -fx-border-width: 3;
+            -fx-border-radius: 20;
+            -fx-text-fill: #FFFFFF;
+            -fx-font-size: 18px;
+            -fx-font-family: 'Comic Sans MS';
+            -fx-font-weight: bold;
+            -fx-cursor: hand;
+            """;
 
     /**
      * Constructs a new GameMenuView with the specified controller.
      *
-     * @param controller the GameMenuController responsible for handling menu interactions
+     * @param controller the GameMenuController responsible for handling game menu interactions
      */
     public GameMenuView(final GameMenuController controller) {
         this.controller = controller;
@@ -40,38 +76,50 @@ public class GameMenuView extends AView {
 
     /**
      * Initializes the game menu view.
-     *
      */
     @Override
     public void init() {
-        // JavaFX init
         VBox vBox = new VBox();
         ArrayList<Button> buttons = new ArrayList<>();
 
-        // Tile Pane Init
-        vBox.setStyle(BACKGROUND_STYLE);
+        String backgroundStyle = """
+                -fx-background-color: linear-gradient(to bottom, #FFE4E1, #FFC0CB);
+                -fx-background-repeat: repeat;
+                """;
+
+        vBox.setStyle(backgroundStyle);
         vBox.setAlignment(Pos.CENTER);
-        vBox.setSpacing(BUTTON_SPACING);
+        vBox.setSpacing(VBOX_SPACING);
+        vBox.setPadding(new javafx.geometry.Insets(VBOX_PADDING));
 
-        // Create Buttons
-        Button continueGame = new Button("Continue Game");
-        Button saveGame = new Button("Save Game");
-        Button toMainMenu = new Button("To Main Menu");
-        Button exitGame = new Button("Exit Game");
+        Button continueGame = createPrincessButton("Continue Game");
+        Button saveGame = createPrincessButton("Save Progress");
+        Button toMainMenu = createPrincessButton("Return to Main Menu");
+        Button exitGame = createPrincessButton("Exit");
 
-        // Add buttons to the list
         buttons.add(continueGame);
         buttons.add(saveGame);
         buttons.add(toMainMenu);
         buttons.add(exitGame);
 
-        // Configure buttons and add them to VBox
-        configureAndAddButtonsToVBox(buttons, vBox);
+        DropShadow shadow = new DropShadow();
+        shadow.setColor(Color.rgb(0, 0, 0, SHADOW_OPACITY));
+        shadow.setOffsetX(SHADOW_OFFSET_X);
+        shadow.setOffsetY(SHADOW_OFFSET_Y);
 
-        // Create Scene
-        scene = new Scene(vBox, Config.getWindowWidth(), Config.getWindowHeight(), Color.BLACK);
+        for (Button button : buttons) {
+            button.setPrefHeight(BUTTON_PREF_HEIGHT);
+            button.setPrefWidth(BUTTON_PREF_WIDTH);
+            button.setEffect(shadow);
 
-        // Attaching Event Listeners
+            button.setOnMouseEntered(_ -> button.setStyle(BUTTON_HOVER_STYLE));
+            button.setOnMouseExited(_ -> button.setStyle(BUTTON_STYLE));
+
+            vBox.getChildren().add(button);
+        }
+
+        scene = new Scene(vBox, Config.getWindowWidth(), Config.getWindowHeight());
+
         scene.setOnKeyPressed(((GameMenuController) controller)::keyPress);
         continueGame.setOnMouseClicked(((GameMenuController) controller)
                 ::gameContinueButton);
@@ -81,21 +129,41 @@ public class GameMenuView extends AView {
         exitGame.setOnMouseClicked(((GameMenuController) controller)::exitGameButton);
     }
 
-    /**
-     * Renders the game menu view.
-     *
-     */
-    @Override
-    public void render() {
+    private Button createPrincessButton(final String text) {
+        Button button = new Button(text);
+        button.setStyle(BUTTON_STYLE);
+
+        // Add heart decoration to button text
+        button.setGraphic(createHeartDecoration());
+        button.setContentDisplay(javafx.scene.control.ContentDisplay.RIGHT);
+
+        return button;
     }
 
-    /**
-     * Returns a string representation of this GameMenuView.
-     *
-     * @return the representation of the GameMenuView as a string.
-     */
+    private javafx.scene.shape.Path createHeartDecoration() {
+        javafx.scene.shape.Path heart = new javafx.scene.shape.Path();
+        heart.setFill(Color.GOLD);
+        heart.getElements().addAll(
+                new javafx.scene.shape.MoveTo(0, 0),
+                new javafx.scene.shape.CubicCurveTo(
+                        HEART_CONTROL_X1, HEART_CONTROL_Y1,
+                        HEART_CONTROL_X2, HEART_CONTROL_Y2,
+                        HEART_FINAL_X / 2, HEART_FINAL_Y),
+                new javafx.scene.shape.CubicCurveTo(
+                        HEART_CONTROL_X2, HEART_CONTROL_Y2,
+                        HEART_FINAL_X, HEART_CONTROL_Y2,
+                        HEART_FINAL_X, HEART_FINAL_Y),
+                new javafx.scene.shape.QuadCurveTo(
+                        HEART_QUAD_CONTROL_X, HEART_QUAD_CONTROL_Y,
+                        HEART_CONTROL_X1, HEART_CONTROL_Y1)
+        );
+        heart.setScaleX(HEART_SCALE);
+        heart.setScaleY(HEART_SCALE);
+        return heart;
+    }
+
+
     @Override
-    public String toString() {
-        return "GameMenuView{}";
+    public void render() {
     }
 }
